@@ -25,6 +25,11 @@ app.use('/api/ai', aiRoutes);
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mednexis')
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    // Vercel serverless functions do not need to strictly listen to ports
+    if (process.env.NODE_ENV !== 'production') {
+      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    }
   })
   .catch((err) => console.error('Failed to connect to MongoDB', err));
+
+module.exports = app;

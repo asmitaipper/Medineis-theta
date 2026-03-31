@@ -1,4 +1,5 @@
-const API_URL = 'http://localhost:5000/api';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_URL = isLocal ? 'http://localhost:5000/api' : '/api';
 
 async function fetchAPI(endpoint, method = 'GET', body = null) {
   const token = localStorage.getItem('mednexis_token');
