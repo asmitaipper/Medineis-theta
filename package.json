@@ -1,0 +1,22 @@
+{
+  "name": "mednexis",
+  "version": "1.0.0",
+  "description": "MedNexis is a complete Full-Stack Web Application designed for a college project demonstration. It features a modern, clean UI for Patients and Doctors to manage appointments, keep track of medical records, and utilize an internal rule-based AI for health suggestions.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.3"
+  }
+}

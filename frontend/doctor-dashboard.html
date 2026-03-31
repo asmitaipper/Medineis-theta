@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard - MedNexis</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="doctor-dashboard.html" class="logo">MedNexis ⚕️</a>
+    <div class="nav-links">
+      <a href="doctor-dashboard.html">Dashboard</a>
+      <a href="appointments.html">Appointments</a>
+      <a href="records.html">Patient Records</a>
+      <button onclick="logout()" class="logout-btn" style="margin-left: 20px;">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container" id="root"></div>
+
+  <script src="js/api.js"></script>
+  <script>
+    if (localStorage.getItem('mednexis_role') !== 'Doctor') {
+      window.location.href = 'index.html';
+    }
+  </script>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function DoctorDashboard() {
+      const [appointments, setAppointments] = useState([]);
+      const name = localStorage.getItem('mednexis_name');
+
+      useEffect(() => {
+        fetchData();
+      }, []);
+
+      const fetchData = async () => {
+        try {
+          const appts = await fetchAPI('/appointments');
+          setAppointments(appts || []);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      const updateStatus = async (id, status) => {
+        try {
+          await fetchAPI(`/appointments/${id}/status`, 'PATCH', { status });
+          fetchData(); // Refresh list
+        } catch (err) {
+          alert('Failed to update status: ' + err.message);
+        }
+      };
+
+      return (
+        <div>
+          <div className="dashboard-header">
+            <h2>Welcome Dr. {name}</h2>
+          </div>
+          
+          <div className="card">
+            <h3>Appointments Overview</h3>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Patient Name</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {appointments.length === 0 ? (
+                  <tr><td colSpan="4">No appointments found.</td></tr>
+                ) : (
+                  appointments.map(apt => (
+                    <tr key={apt._id}>
+                      <td>{apt.patient?.name || 'Unknown'}</td>
+                      <td>{new Date(apt.date).toLocaleString()}</td>
+                      <td><span className={`badge badge-${apt.status}`}>{apt.status}</span></td>
+                      <td>
+                        {apt.status === 'Pending' && (
+                          <button className="btn btn-secondary" style={{padding: '6px 12px', width: 'auto'}} onClick={() => updateStatus(apt._id, 'Confirmed')}>Confirm</button>
+                        )}
+                        {apt.status === 'Confirmed' && (
+                          <button className="btn btn-secondary" style={{padding: '6px 12px', width: 'auto'}} onClick={() => updateStatus(apt._id, 'Completed')}>Mark Completed</button>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<DoctorDashboard />);
+  </script>
+</body>
+</html>

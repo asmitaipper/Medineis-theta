@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointments - MedNexis</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#" class="logo" id="homeLink">MedNexis ⚕️</a>
+    <div class="nav-links">
+      <a href="#" id="dashLink">Dashboard</a>
+      <a href="appointments.html">Appointments</a>
+      <a href="records.html">Patient Records</a>
+      <button onclick="logout()" class="logout-btn" style="margin-left: 20px;">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="dashboard-header">
+      <h2>Book an Appointment</h2>
+    </div>
+    
+    <div id="alert"></div>
+
+    <div class="card" id="bookingCard" style="display: none; max-width: 600px; margin: 0 auto;">
+      <form id="bookForm">
+        <div class="form-group">
+          <label>Select Doctor</label>
+          <select id="doctorSelect" required>
+            <option value="">Loading doctors...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Select Date & Time</label>
+          <input type="datetime-local" id="date" required>
+        </div>
+        <button type="submit" class="btn">Book Now</button>
+      </form>
+    </div>
+
+    <div class="card" id="doctorNotice" style="display: none; text-align: center;">
+      <p>As a doctor, you can manage your appointments directly from your <a href="doctor-dashboard.html">Dashboard</a>.</p>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    checkAuthAndRedirect();
+    const role = localStorage.getItem('mednexis_role');
+    
+    document.getElementById('homeLink').href = role === 'Doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
+    document.getElementById('dashLink').href = role === 'Doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
+
+    if (role === 'Patient') {
+      document.getElementById('bookingCard').style.display = 'block';
+      loadDoctors();
+    } else {
+      document.getElementById('doctorNotice').style.display = 'block';
+    }
+
+    async function loadDoctors() {
+      try {
+        const doctors = await fetchAPI('/auth/users?role=Doctor');
+        const select = document.getElementById('doctorSelect');
+        select.innerHTML = '<option value="">-- Choose a Doctor --</option>';
+        doctors.forEach(doc => {
+          select.innerHTML += `<option value="${doc._id}">Dr. ${doc.name}</option>`;
+        });
+      } catch (err) {
+        showAlert('Failed to load doctors: ' + err.message);
+      }
+    }
+
+    document.getElementById('bookForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const doctorId = document.getElementById('doctorSelect').value;
+      const date = document.getElementById('date').value;
+
+      try {
+        await fetchAPI('/appointments', 'POST', { doctorId, date });
+        showAlert('Appointment booked successfully!', false);
+        setTimeout(() => window.location.href = 'patient-dashboard.html', 1500);
+      } catch (err) {
+        showAlert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>

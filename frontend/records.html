@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Records - MedNexis</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#" class="logo" id="homeLink">MedNexis ⚕️</a>
+    <div class="nav-links">
+      <a href="#" id="dashLink">Dashboard</a>
+      <a href="appointments.html">Appointments</a>
+      <a href="records.html">Patient Records</a>
+      <button onclick="logout()" class="logout-btn" style="margin-left: 20px;">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="dashboard-header">
+      <h2>Medical Records</h2>
+    </div>
+    
+    <div id="alert"></div>
+
+    <!-- Doctor View: Add Record -->
+    <div class="card" id="addRecordCard" style="display: none; margin-bottom: 30px;">
+      <h3>Add New Medical Record</h3>
+      <form id="recordForm" style="margin-top: 15px;">
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Select Patient</label>
+            <select id="patientSelect" required>
+              <option value="">Loading patients...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Diagnosis & Symptoms</label>
+            <input type="text" id="diagnosis" required placeholder="E.g., High Fever, Cough">
+            <!-- AI Suggestion Button -->
+            <button type="button" class="btn btn-secondary" style="margin-top: 10px; padding: 6px;" onclick="getAISuggestion()">🧠 Get AI Suggestion</button>
+          </div>
+        </div>
+        
+        <div id="aiResult" class="ai-box" style="display: none;"></div>
+
+        <div class="form-group" style="margin-top: 15px;">
+          <label>Medical History Details</label>
+          <textarea id="history" rows="3" required placeholder="Patient reported fever for 3 days..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Prescribed Medicines</label>
+          <input type="text" id="medicines" required placeholder="E.g., Paracetamol 500mg">
+        </div>
+        <button type="submit" class="btn">Save Medical Record</button>
+      </form>
+    </div>
+
+    <!-- Patient/Doctor View: View Records -->
+    <div class="card" id="viewRecordsCard">
+      <h3>History</h3>
+      <table class="table" id="recordsTable">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Diagnosis</th>
+            <th>Medicines</th>
+            <th>History</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="5">Loading records...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    checkAuthAndRedirect();
+    const role = localStorage.getItem('mednexis_role');
+    
+    document.getElementById('homeLink').href = role === 'Doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
+    document.getElementById('dashLink').href = role === 'Doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
+
+    if (role === 'Doctor') {
+      document.getElementById('addRecordCard').style.display = 'block';
+      loadPatients();
+    }
+
+    loadRecords();
+
+    async function loadPatients() {
+      try {
+        const patients = await fetchAPI('/auth/users?role=Patient');
+        const select = document.getElementById('patientSelect');
+        select.innerHTML = '<option value="">-- Choose a Patient --</option>';
+        patients.forEach(p => {
+          select.innerHTML += `<option value="${p._id}">${p.name} (${p.email})</option>`;
+        });
+      } catch (err) {
+        console.error('Failed to load patients', err);
+      }
+    }
+
+    async function loadRecords() {
+      try {
+        const records = await fetchAPI('/records');
+        const tbody = document.querySelector('#recordsTable tbody');
+        if (records.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5">No records found.</td></tr>';
+          return;
+        }
+        
+        tbody.innerHTML = '';
+        records.forEach(rec => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${rec.patient?.name || 'Unknown'}</td>
+              <td>${rec.diagnosis}</td>
+              <td>${rec.medicines}</td>
+              <td>${rec.history}</td>
+              <td>${new Date(rec.createdAt).toLocaleDateString()}</td>
+            </tr>
+          `;
+        });
+      } catch (err) {
+        showAlert('Failed to load records: ' + err.message);
+      }
+    }
+
+    document.getElementById('recordForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const patientId = document.getElementById('patientSelect').value;
+      const diagnosis = document.getElementById('diagnosis').value;
+      const history = document.getElementById('history').value;
+      const medicines = document.getElementById('medicines').value;
+
+      try {
+        await fetchAPI('/records', 'POST', { patientId, diagnosis, history, medicines });
+        showAlert('Medical record added successfully!', false);
+        document.getElementById('recordForm').reset();
+        document.getElementById('aiResult').style.display = 'none';
+        loadRecords();
+      } catch (err) {
+        showAlert(err.message);
+      }
+    });
+
+    async function getAISuggestion() {
+      const symptoms = document.getElementById('diagnosis').value;
+      if (!symptoms) {
+        alert('Please enter some symptoms in the Diagnosis field first.');
+        return;
+      }
+      
+      try {
+        const result = await fetchAPI('/ai/suggest', 'POST', { symptoms });
+        const aiBox = document.getElementById('aiResult');
+        aiBox.style.display = 'block';
+        aiBox.innerHTML = `<strong>AI Suggestion:</strong> ${result.suggestions.join('<br>')}`;
+      } catch (err) {
+        alert('AI logic failed: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
