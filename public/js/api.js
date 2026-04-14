@@ -48,13 +48,27 @@ function checkAuthAndRedirect() {
   const token = localStorage.getItem('mednexis_token');
   const role = localStorage.getItem('mednexis_role');
   
-  const isAuthPage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('register.html') || window.location.pathname === '/' || window.location.pathname === '';
+  const path = window.location.pathname;
+  const isAuthPage = path.endsWith('index.html') || path.endsWith('register.html') || path === '/' || path === '';
   
   if (!token && !isAuthPage) {
     window.location.href = 'index.html';
-  } else if (token && isAuthPage) {
-    if (role === 'Doctor') window.location.href = 'doctor-dashboard.html';
-    else window.location.href = 'patient-dashboard.html';
+  } else if (token) {
+    if (isAuthPage) {
+      if (role === 'Admin') window.location.href = 'admin-dashboard.html';
+      else if (role === 'Doctor') window.location.href = 'doctor-dashboard.html';
+      else window.location.href = 'patient-dashboard.html';
+    } else {
+      if (role === 'Patient' && (path.includes('doctor') || path.includes('admin'))) {
+        window.location.href = 'patient-dashboard.html';
+      }
+      if (role === 'Doctor' && (path.includes('patient-dashboard') || path.includes('admin'))) {
+        window.location.href = 'doctor-dashboard.html';
+      }
+      if (role === 'Admin' && (!path.includes('admin'))) {
+        window.location.href = 'admin-dashboard.html';
+      }
+    }
   }
 }
 

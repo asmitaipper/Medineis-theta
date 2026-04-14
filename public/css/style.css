@@ -397,6 +397,16 @@ h1, h2, h3, h4, h5, h6, .logo {
 .badge-Completed { background: var(--success-bg); color: var(--success-text); }
 .badge-Completed::before { background: var(--success); }
 
+/* Priority Badges */
+.badge-High { background: var(--danger-bg); color: var(--danger-text); }
+.badge-High::before { background: var(--danger); }
+
+.badge-Medium { background: var(--warning-bg); color: var(--warning-text); }
+.badge-Medium::before { background: var(--warning); }
+
+.badge-Low { background: #f8fafc; color: var(--text-muted); border: 1px solid var(--border); }
+.badge-Low::before { background: var(--text-muted); }
+
 /* Buttons inside table */
 .action-btn {
   padding: 8px 16px;

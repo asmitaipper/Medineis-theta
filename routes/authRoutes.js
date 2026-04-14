@@ -7,14 +7,20 @@ const jwt = require('jsonwebtoken');
 // @route   POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, specialty } = req.body;
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: 'User already exists' });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    user = new User({ name, email, password: hashedPassword, role });
+    user = new User({ 
+      name, 
+      email, 
+      password: hashedPassword, 
+      role, 
+      specialty: role === 'Doctor' ? (specialty || 'General Physician') : null 
+    });
     await user.save();
 
     res.status(201).json({ message: 'User registered successfully' });

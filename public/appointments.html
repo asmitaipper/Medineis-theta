@@ -28,9 +28,12 @@
     <div class="card" id="bookingCard" style="display: none; max-width: 600px; margin: 0 auto;">
       <form id="bookForm">
         <div class="form-group">
-          <label>Select Doctor</label>
-          <select id="doctorSelect" required>
-            <option value="">Loading doctors...</option>
+          <label>Primary Health Concern</label>
+          <select id="diseaseSelect" required>
+            <option value="General">General Illness / Checkup</option>
+            <option value="Brain/Neurological">Brain / Neurological</option>
+            <option value="Heart/Cardiovascular">Heart / Cardiovascular</option>
+            <option value="Bone/Orthopedic">Bone / Orthopedic</option>
           </select>
         </div>
         <div class="form-group">
@@ -76,12 +79,12 @@
 
     document.getElementById('bookForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const doctorId = document.getElementById('doctorSelect').value;
+      const diseaseCategory = document.getElementById('diseaseSelect').value;
       const date = document.getElementById('date').value;
 
       try {
-        await fetchAPI('/appointments', 'POST', { doctorId, date });
-        showAlert('Appointment booked successfully!', false);
+        await fetchAPI('/appointments', 'POST', { diseaseCategory, date });
+        showAlert('Appointment booked successfully! Our intelligent system assigned you to the best specialist.', false);
         setTimeout(() => window.location.href = 'patient-dashboard.html', 1500);
       } catch (err) {
         showAlert(err.message);

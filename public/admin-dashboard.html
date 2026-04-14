@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Doctor Dashboard - MedNexis</title>
+  <title>Admin Dashboard - MedNexis</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -11,10 +11,9 @@
 </head>
 <body>
   <nav class="navbar">
-    <a href="doctor-dashboard.html" class="logo">MedNexis ⚕️</a>
+    <a href="admin-dashboard.html" class="logo">MedNexis ⚡ Admin</a>
     <div class="nav-links">
-      <a href="doctor-dashboard.html" class="active">Dashboard</a>
-      <a href="records.html">Patient Records</a>
+      <a href="admin-dashboard.html" class="active">Overview</a>
       <button onclick="logout()" class="logout-btn">Logout</button>
     </div>
   </nav>
@@ -23,16 +22,17 @@
 
   <script src="js/api.js"></script>
   <script>
-    if (localStorage.getItem('mednexis_role') !== 'Doctor') {
+    if (localStorage.getItem('mednexis_role') !== 'Admin') {
       window.location.href = 'index.html';
     }
   </script>
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    function DoctorDashboard() {
+    function AdminDashboard() {
       const [appointments, setAppointments] = useState([]);
-      const name = localStorage.getItem('mednexis_name') || 'Doctor';
+      const [users, setUsers] = useState([]);
+      const name = localStorage.getItem('mednexis_name') || 'Admin';
 
       useEffect(() => {
         fetchData();
@@ -41,87 +41,78 @@
       const fetchData = async () => {
         try {
           const appts = await fetchAPI('/appointments');
+          const allUsers = await fetchAPI('/auth/users'); // Custom endpoints or reuse existing
+          
           setAppointments(appts || []);
+          setUsers(allUsers || []);
         } catch (err) {
           console.error(err);
         }
       };
 
-      const updateStatus = async (id, status) => {
-        try {
-          await fetchAPI(`/appointments/${id}/status`, 'PATCH', { status });
-          fetchData(); // Refresh list
-        } catch (err) {
-          alert('Failed to update status: ' + err.message);
-        }
-      };
-
       const pendingCount = appointments.filter(a => a.status === 'Pending').length;
-      const todayCount = appointments.filter(a => new Date(a.date).toDateString() === new Date().toDateString()).length;
+      const totalDoctors = users.filter(u => u.role === 'Doctor').length;
+      const totalPatients = users.filter(u => u.role === 'Patient').length;
 
       return (
         <div className="container">
           <div className="dashboard-header">
-            <h2>Welcome, Dr. {name}</h2>
-            <p>Here is your schedule and patient overview for today.</p>
+            <h2>System Overview</h2>
+            <p>Welcome back, Administrator. Here are the global MedNexis statistics.</p>
           </div>
           
           <div className="stats-grid">
+            <div className="stat-card" style={{borderColor: 'var(--primary)'}}>
+              <span className="stat-title">Total Users</span>
+              <span className="stat-value">{users.length}</span>
+            </div>
             <div className="stat-card">
-              <span className="stat-title">Total Appointments</span>
+              <span className="stat-title">Active Doctors</span>
+              <span className="stat-value" style={{color: 'var(--secondary)'}}>{totalDoctors}</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-title">System Appointments</span>
               <span className="stat-value">{appointments.length}</span>
             </div>
             <div className="stat-card">
-              <span className="stat-title">Pending Approvals</span>
+              <span className="stat-title">Unresolved Operations</span>
               <span className="stat-value" style={{color: 'var(--warning)'}}>{pendingCount}</span>
-            </div>
-            <div className="stat-card">
-              <span className="stat-title">Appointments Today</span>
-              <span className="stat-value" style={{color: 'var(--primary)'}}>{todayCount}</span>
             </div>
           </div>
 
           <div className="card">
             <div className="card-title">
-              Recent Appointments
+              Global Appointment Ledger
             </div>
             <div className="table-container">
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Patient Name</th>
+                    <th>System ID</th>
+                    <th>Patient</th>
+                    <th>Assigned Doctor</th>
                     <th>Disease & Priority</th>
                     <th>Date & Time</th>
                     <th>Status</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {appointments.length === 0 ? (
-                    <tr><td colSpan="5" style={{textAlign: 'center', color: 'var(--text-muted)'}}>No appointments scheduled yet.</td></tr>
+                    <tr><td colSpan="6" style={{textAlign: 'center', color: 'var(--text-muted)'}}>No system activity detected.</td></tr>
                   ) : (
                     appointments.map(apt => (
                       <tr key={apt._id}>
+                        <td style={{fontSize: '11px', color: 'var(--text-muted)'}}>{apt._id.slice(-6)}</td>
                         <td style={{fontWeight: '600'}}>{apt.patient?.name || 'Unknown Patient'}</td>
+                        <td><strong style={{color:'var(--primary)'}}>Dr. {apt.doctor?.name}</strong> <span style={{fontSize:'12px'}}>({apt.doctor?.specialty})</span></td>
                         <td>
-                          <div style={{fontWeight: '500', color: 'var(--primary)'}}>{apt.diseaseCategory}</div>
+                          <div style={{fontWeight: '500', color: 'var(--text-main)'}}>{apt.diseaseCategory}</div>
                           <div style={{marginTop: '4px'}}>
                             <span className={`badge badge-${apt.priority}`} style={{padding: '3px 8px', fontSize: '11px'}}>{apt.priority} Priority</span>
                           </div>
                         </td>
-                        <td>{new Date(apt.date).toLocaleString([], {weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'})}</td>
+                        <td>{new Date(apt.date).toLocaleString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'})}</td>
                         <td><span className={`badge badge-${apt.status}`}>{apt.status}</span></td>
-                        <td>
-                          {apt.status === 'Pending' && (
-                            <button className="action-btn confirm" onClick={() => updateStatus(apt._id, 'Confirmed')}>Confirm</button>
-                          )}
-                          {apt.status === 'Confirmed' && (
-                            <button className="action-btn complete" onClick={() => updateStatus(apt._id, 'Completed')}>Mark Completed</button>
-                          )}
-                          {apt.status === 'Completed' && (
-                           <span style={{color: 'var(--text-muted)', fontSize: '13px'}}>No actions needed</span> 
-                          )}
-                        </td>
                       </tr>
                     ))
                   )}
@@ -134,7 +125,7 @@
     }
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<DoctorDashboard />);
+    root.render(<AdminDashboard />);
   </script>
 </body>
 </html>

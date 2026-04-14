@@ -3,7 +3,7 @@ const router = express.Router();
 const Appointment = require('../models/Appointment');
 const { protect } = require('../backend/middleware/authMiddleware');
 
-// Get appointments for the logged-in user
+// Get appointments (Admins see all, patients see theirs, doctors see theirs)
 router.get('/', protect, async (req, res) => {
   try {
     let filter = {};
@@ -11,11 +11,11 @@ router.get('/', protect, async (req, res) => {
       filter.patient = req.user.id;
     } else if (req.user.role === 'Doctor') {
       filter.doctor = req.user.id;
-    }
+    } // Admin sees all (filter remains empty)
     
     const appointments = await Appointment.find(filter)
       .populate('patient', 'name email')
-      .populate('doctor', 'name email')
+      .populate('doctor', 'name email specialty')
       .sort({ date: 1 });
       
     res.json(appointments);
@@ -24,25 +24,57 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// Create new appointment
+// Create new appointment - INTELLIGENT ROUTING
 router.post('/', protect, async (req, res) => {
   try {
-    const { doctorId, date } = req.body;
+    const { date, diseaseCategory } = req.body;
     const patientId = req.user.id;
 
     if (req.user.role !== 'Patient') {
       return res.status(403).json({ message: 'Only patients can book appointments' });
     }
+    
+    // Intelligent Routing Logic
+    let targetSpecialty = 'General Physician';
+    let priority = 'Low';
+    
+    if (diseaseCategory === 'Brain/Neurological') {
+      targetSpecialty = 'Neurologist';
+      priority = 'High';
+    } else if (diseaseCategory === 'Heart/Cardiovascular') {
+      targetSpecialty = 'Cardiologist';
+      priority = 'High';
+    } else if (diseaseCategory === 'Bone/Orthopedic') {
+      targetSpecialty = 'Orthopedist';
+      priority = 'Medium';
+    } else {
+      targetSpecialty = 'General Physician';
+      priority = 'Low';
+    }
+
+    const User = require('../models/User');
+    // Find absolute closest matching Doctor
+    let doctor = await User.findOne({ role: 'Doctor', specialty: targetSpecialty });
+    // Fallback if no specialist exists
+    if (!doctor) {
+      doctor = await User.findOne({ role: 'Doctor' });
+    }
+    if (!doctor) {
+      return res.status(400).json({ message: 'No doctors are currently available in the system.' });
+    }
 
     const newAppointment = new Appointment({
       patient: patientId,
-      doctor: doctorId,
-      date
+      doctor: doctor._id,
+      date,
+      diseaseCategory: diseaseCategory || 'General',
+      priority
     });
 
     await newAppointment.save();
     res.status(201).json(newAppointment);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 });
