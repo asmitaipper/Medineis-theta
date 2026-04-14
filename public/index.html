@@ -204,8 +204,7 @@
       <a href="#blog" style="color: #64748b;">Blog</a>
     </div>
     <div style="display: flex; align-items: center; gap: 15px;">
-      <a href="login.html" class="btn" style="background: transparent; color: #1e293b; border-radius: 30px; padding: 10px 20px; width: auto; font-family: 'Inter'; font-size: 14px; box-shadow: none; font-weight: 600;">Login</a>
-      <a href="register.html" class="btn" style="background: var(--primary); color: white; border-radius: 30px; padding: 10px 24px; width: auto; font-family: 'Inter'; font-size: 14px; box-shadow: none; font-weight: 600;">Register</a>
+      <a href="login.html" id="authActionBtn" class="btn" style="background: var(--primary); color: white; border-radius: 30px; padding: 12px 28px; width: auto; font-family: 'Inter'; font-size: 14px; box-shadow: none; font-weight: 600;">Login / Register</a>
     </div>
   </nav>
 
@@ -238,7 +237,7 @@
 
         <!-- Overlapping Center Photo -->
         <div class="floating-photo">
-          <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=600" style="width: 100%; height: 100%; object-fit: cover;" alt="Medical Professional"/>
+          <img src="images/hero.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Medical Professional"/>
         </div>
 
         <!-- Right Side Floating Cards -->
@@ -265,5 +264,16 @@
   </div>
 
   <script src="js/api.js"></script>
+  <script>
+    // Dynamically update the Login button to a Dashboard shortcut if the user is authenticated
+    const token = localStorage.getItem('mednexis_token');
+    const role = localStorage.getItem('mednexis_role');
+    if (token && role) {
+      const authBtn = document.getElementById('authActionBtn');
+      const dashLink = role === 'Admin' ? 'admin-dashboard.html' : role === 'Doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
+      authBtn.href = dashLink;
+      authBtn.innerHTML = 'Dashboard &rarr;';
+    }
+  </script>
 </body>
 </html>
