@@ -2,13 +2,14 @@
   publish = "frontend"
   command = "echo 'No build step needed'"
 
-# Serve all HTML pages directly
+# Proxy all /api/* calls to the Vercel backend
 [[redirects]]
-  from = "/"
-  to = "/index.html"
+  from = "/api/*"
+  to = "https://mednexis-gb647bw3x-vakhariyasuyash-5329s-projects.vercel.app/api/:splat"
   status = 200
+  force = true
 
-# Catch-all: serve all other frontend routes as static files
+# Serve all frontend HTML routes
 [[redirects]]
   from = "/*"
   to = "/:splat"
