@@ -21,12 +21,11 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('/api/records', recordRoutes);
 app.use('/api/ai', aiRoutes);
 
-// Static Files — serve frontend
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Static Files (for local dev — Vercel serves public/ automatically)
+app.use(express.static(path.join(__dirname, '../public')));
 
-// Catch-all: serve index.html for any non-API route
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // Database Connection

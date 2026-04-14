@@ -1,9 +1,8 @@
 [build]
-  publish = "frontend"
+  publish = "public"
   functions = "netlify/functions"
   command = "npm install"
 
-# Serve all frontend HTML routes
 [[redirects]]
   from = "/*"
   to = "/:splat"
