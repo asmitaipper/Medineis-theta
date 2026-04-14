@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap');
 
 :root {
-  /* Clinical Professional Light Theme Palette */
-  --primary: #0284c7; /* Clinical Blue */
-  --primary-dark: #0369a1;
-  --primary-glow: rgba(2, 132, 199, 0.2);
+  /* Ultra-Premium Purple Branding per Reference */
+  --primary: #6343e8; /* Deep vivid purple */
+  --primary-dark: #4b30bd;
+  --primary-glow: rgba(99, 67, 232, 0.2);
   
-  --secondary: #0ea5e9;
-  --secondary-dark: #0284c7;
+  --secondary: #2f1d7a;
+  --secondary-dark: #1f125a;
   
   --success: #10b981;
   --success-bg: #d1fae5;
@@ -21,7 +21,7 @@
   --danger-bg: #fee2e2;
   --danger-text: #991b1b;
   
-  --bg-color: #f8fafc;
+  --bg-color: #ffffff; /* User explicitly requested pure white background */
   --surface: #ffffff;
   --text-main: #0f172a;
   --text-muted: #64748b;
