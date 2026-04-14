@@ -3,169 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Medical Records - MedNexis</title>
+  <title>Patient Records - MedNexis</title>
   <link rel="stylesheet" href="css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
   <nav class="navbar">
-    <a href="#" class="logo" id="homeLink">MedNexis ⚕️</a>
+    <a href="doctor-dashboard.html" class="logo">MedNexis ⚕️</a>
     <div class="nav-links">
-      <a href="#" id="dashLink">Dashboard</a>
-      <a href="appointments.html">Appointments</a>
-      <a href="records.html">Patient Records</a>
-      <button onclick="logout()" class="logout-btn" style="margin-left: 20px;">Logout</button>
+      <a href="doctor-dashboard.html">Dashboard</a>
+      <a href="records.html" class="active">Patient Records</a>
+      <button onclick="logout()" class="logout-btn">Logout</button>
     </div>
   </nav>
 
-  <div class="container">
-    <div class="dashboard-header">
-      <h2>Medical Records</h2>
-    </div>
-    
-    <div id="alert"></div>
-
-    <!-- Doctor View: Add Record -->
-    <div class="card" id="addRecordCard" style="display: none; margin-bottom: 30px;">
-      <h3>Add New Medical Record</h3>
-      <form id="recordForm" style="margin-top: 15px;">
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Select Patient</label>
-            <select id="patientSelect" required>
-              <option value="">Loading patients...</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Diagnosis & Symptoms</label>
-            <input type="text" id="diagnosis" required placeholder="E.g., High Fever, Cough">
-            <!-- AI Suggestion Button -->
-            <button type="button" class="btn btn-secondary" style="margin-top: 10px; padding: 6px;" onclick="getAISuggestion()">🧠 Get AI Suggestion</button>
-          </div>
-        </div>
-        
-        <div id="aiResult" class="ai-box" style="display: none;"></div>
-
-        <div class="form-group" style="margin-top: 15px;">
-          <label>Medical History Details</label>
-          <textarea id="history" rows="3" required placeholder="Patient reported fever for 3 days..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Prescribed Medicines</label>
-          <input type="text" id="medicines" required placeholder="E.g., Paracetamol 500mg">
-        </div>
-        <button type="submit" class="btn">Save Medical Record</button>
-      </form>
-    </div>
-
-    <!-- Patient/Doctor View: View Records -->
-    <div class="card" id="viewRecordsCard">
-      <h3>History</h3>
-      <table class="table" id="recordsTable">
-        <thead>
-          <tr>
-            <th>Patient</th>
-            <th>Diagnosis</th>
-            <th>Medicines</th>
-            <th>History</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="5">Loading records...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div id="root"></div>
 
   <script src="js/api.js"></script>
   <script>
-    checkAuthAndRedirect();
-    const role = localStorage.getItem('mednexis_role');
-    
-    document.getElementById('homeLink').href = role === 'Doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
-    document.getElementById('dashLink').href = role === 'Doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
-
-    if (role === 'Doctor') {
-      document.getElementById('addRecordCard').style.display = 'block';
-      loadPatients();
+    if (localStorage.getItem('mednexis_role') !== 'Doctor') {
+      window.location.href = 'index.html';
     }
+  </script>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
 
-    loadRecords();
+    function DoctorRecords() {
+      const [records, setRecords] = useState([]);
+      const [patients, setPatients] = useState([]);
+      const [formData, setFormData] = useState({ patientId: '', history: '', diagnosis: '', medicines: '' });
+      const [aiSuggestion, setAiSuggestion] = useState(null);
+      const [loadingAI, setLoadingAI] = useState(false);
 
-    async function loadPatients() {
-      try {
-        const patients = await fetchAPI('/auth/users?role=Patient');
-        const select = document.getElementById('patientSelect');
-        select.innerHTML = '<option value="">-- Choose a Patient --</option>';
-        patients.forEach(p => {
-          select.innerHTML += `<option value="${p._id}">${p.name} (${p.email})</option>`;
-        });
-      } catch (err) {
-        console.error('Failed to load patients', err);
-      }
-    }
+      useEffect(() => {
+        fetchRecords();
+        fetchPatients();
+      }, []);
 
-    async function loadRecords() {
-      try {
-        const records = await fetchAPI('/records');
-        const tbody = document.querySelector('#recordsTable tbody');
-        if (records.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5">No records found.</td></tr>';
-          return;
+      const fetchRecords = async () => {
+        try {
+          const data = await fetchAPI('/records');
+          setRecords(data || []);
+        } catch (err) { console.error(err); }
+      };
+
+      const fetchPatients = async () => {
+        try {
+          const data = await fetchAPI('/auth/users?role=Patient');
+          setPatients(data || []);
+        } catch (err) { console.error(err); }
+      };
+
+      const getAiSuggestion = async () => {
+        if (!formData.history) return alert('Enter patient history first.');
+        setLoadingAI(true);
+        try {
+          const res = await fetchAPI('/ai/suggest', 'POST', { symptoms: formData.history });
+          setAiSuggestion(res.suggestions.join(' | '));
+        } catch (err) {
+          alert('AI Error: ' + err.message);
+        } finally {
+          setLoadingAI(false);
         }
-        
-        tbody.innerHTML = '';
-        records.forEach(rec => {
-          tbody.innerHTML += `
-            <tr>
-              <td>${rec.patient?.name || 'Unknown'}</td>
-              <td>${rec.diagnosis}</td>
-              <td>${rec.medicines}</td>
-              <td>${rec.history}</td>
-              <td>${new Date(rec.createdAt).toLocaleDateString()}</td>
-            </tr>
-          `;
-        });
-      } catch (err) {
-        showAlert('Failed to load records: ' + err.message);
-      }
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+          await fetchAPI('/records', 'POST', formData);
+          setFormData({ patientId: '', history: '', diagnosis: '', medicines: '' });
+          setAiSuggestion(null);
+          fetchRecords();
+          alert('Medical Record Saved Successfully!');
+        } catch (err) {
+          alert(err.message);
+        }
+      };
+
+      return (
+        <div className="container">
+          <div className="dashboard-header">
+            <h2>Patient Records Management</h2>
+            <p>Add new medical records and view patient history.</p>
+          </div>
+          
+          <div className="grid-2">
+            <div className="card">
+              <h3 className="card-title">Add New Record</h3>
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label>Select Patient</label>
+                  <select required value={formData.patientId} onChange={(e) => setFormData({...formData, patientId: e.target.value})}>
+                    <option value="">-- Choose Patient --</option>
+                    {patients.map(p => <option key={p._id} value={p._id}>{p.name} ({p.email})</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Patient History / Symptoms</label>
+                  <textarea rows="4" required placeholder="Describe patient symptoms here..." value={formData.history} onChange={(e) => setFormData({...formData, history: e.target.value})}></textarea>
+                </div>
+                
+                <button type="button" className="btn btn-secondary" style={{marginBottom: '20px', background: 'linear-gradient(135deg, #0ea5e9, #0284c7)'}} onClick={getAiSuggestion} disabled={loadingAI}>
+                  {loadingAI ? 'Analyzing...' : '✨ Get AI Diagnosis Suggestion'}
+                </button>
+
+                {aiSuggestion && (
+                  <div className="ai-box">
+                    <div className="ai-icon">✨</div>
+                    <div>
+                      <strong>AI Suggestion:</strong><br/>
+                      {aiSuggestion}
+                    </div>
+                  </div>
+                )}
+
+                <div className="form-group" style={{marginTop: '20px'}}>
+                  <label>Official Diagnosis</label>
+                  <input type="text" required placeholder="Enter final diagnosis..." value={formData.diagnosis} onChange={(e) => setFormData({...formData, diagnosis: e.target.value})} />
+                </div>
+                <div className="form-group">
+                  <label>Prescribed Medicines</label>
+                  <textarea rows="3" required placeholder="List medicines..." value={formData.medicines} onChange={(e) => setFormData({...formData, medicines: e.target.value})}></textarea>
+                </div>
+                <button type="submit" className="btn">Save Medical Record</button>
+              </form>
+            </div>
+
+            <div className="card">
+              <h3 className="card-title">Recent Records</h3>
+              {records.length === 0 ? <p style={{color:'var(--text-muted)'}}>No records available.</p> : (
+                <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+                  {records.slice().reverse().map(rec => (
+                    <div key={rec._id} style={{padding: '20px', border: '1px solid var(--border)', borderRadius: '12px', background: 'var(--bg-color)'}}>
+                      <div style={{display:'flex', justifyContent:'space-between', marginBottom:'12px'}}>
+                        <h4 style={{margin:0, color:'var(--primary)', fontSize:'18px'}}>{rec.patient?.name || 'Unknown'}</h4>
+                        <span style={{fontSize:'13px', color:'var(--text-muted)'}}>{new Date(rec.createdAt).toLocaleDateString()}</span>
+                      </div>
+                      <p style={{fontSize:'14px', marginBottom:'8px'}}><strong>Diagnosis:</strong> {rec.diagnosis}</p>
+                      <p style={{fontSize:'14px', marginBottom:'8px', color: 'var(--text-muted)'}}><strong>History:</strong> {rec.history}</p>
+                      <p style={{fontSize:'14px', margin:0}}><strong>Medicines:</strong> {rec.medicines}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
     }
 
-    document.getElementById('recordForm')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const patientId = document.getElementById('patientSelect').value;
-      const diagnosis = document.getElementById('diagnosis').value;
-      const history = document.getElementById('history').value;
-      const medicines = document.getElementById('medicines').value;
-
-      try {
-        await fetchAPI('/records', 'POST', { patientId, diagnosis, history, medicines });
-        showAlert('Medical record added successfully!', false);
-        document.getElementById('recordForm').reset();
-        document.getElementById('aiResult').style.display = 'none';
-        loadRecords();
-      } catch (err) {
-        showAlert(err.message);
-      }
-    });
-
-    async function getAISuggestion() {
-      const symptoms = document.getElementById('diagnosis').value;
-      if (!symptoms) {
-        alert('Please enter some symptoms in the Diagnosis field first.');
-        return;
-      }
-      
-      try {
-        const result = await fetchAPI('/ai/suggest', 'POST', { symptoms });
-        const aiBox = document.getElementById('aiResult');
-        aiBox.style.display = 'block';
-        aiBox.innerHTML = `<strong>AI Suggestion:</strong> ${result.suggestions.join('<br>')}`;
-      } catch (err) {
-        alert('AI logic failed: ' + err.message);
-      }
-    }
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<DoctorRecords />);
   </script>
 </body>
 </html>
