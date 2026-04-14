@@ -32,6 +32,8 @@
 
     function DoctorDashboard() {
       const [appointments, setAppointments] = useState([]);
+      const [searchTerm, setSearchTerm] = useState('');
+      const [priorityFilter, setPriorityFilter] = useState('All');
       const name = localStorage.getItem('mednexis_name') || 'Doctor';
 
       useEffect(() => {
@@ -59,6 +61,12 @@
       const pendingCount = appointments.filter(a => a.status === 'Pending').length;
       const todayCount = appointments.filter(a => new Date(a.date).toDateString() === new Date().toDateString()).length;
 
+      const filtered = appointments.filter(apt => {
+        const matchesSearch = apt.patient?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || apt.diseaseCategory?.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesPriority = priorityFilter === 'All' || apt.priority === priorityFilter;
+        return matchesSearch && matchesPriority;
+      });
+
       return (
         <div className="container">
           <div className="dashboard-header">
@@ -84,6 +92,25 @@
           <div className="card">
             <div className="card-title">
               Recent Appointments
+              <div style={{display: 'flex', gap: '10px'}}>
+                <input 
+                  type="text" 
+                  placeholder="Search patients or diseases..." 
+                  style={{padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '13px'}} 
+                  value={searchTerm} 
+                  onChange={(e) => setSearchTerm(e.target.value)} 
+                />
+                <select 
+                  style={{padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '13px'}}
+                  value={priorityFilter}
+                  onChange={(e) => setPriorityFilter(e.target.value)}
+                >
+                  <option value="All">All Priorities</option>
+                  <option value="High">High Priority</option>
+                  <option value="Medium">Medium Priority</option>
+                  <option value="Low">Low Priority</option>
+                </select>
+              </div>
             </div>
             <div className="table-container">
               <table className="table">
@@ -97,10 +124,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {appointments.length === 0 ? (
-                    <tr><td colSpan="5" style={{textAlign: 'center', color: 'var(--text-muted)'}}>No appointments scheduled yet.</td></tr>
+                  {filtered.length === 0 ? (
+                    <tr><td colSpan="5" style={{textAlign: 'center', color: 'var(--text-muted)'}}>No appointments match your search.</td></tr>
                   ) : (
-                    appointments.map(apt => (
+                    filtered.map(apt => (
                       <tr key={apt._id}>
                         <td style={{fontWeight: '600'}}>{apt.patient?.name || 'Unknown Patient'}</td>
                         <td>

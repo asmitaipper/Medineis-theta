@@ -33,15 +33,28 @@ async function fetchAPI(endpoint, method = 'GET', body = null) {
 }
 
 function showAlert(message, isError = true) {
-  const alertEl = document.getElementById('alert');
-  if (alertEl) {
-    alertEl.textContent = message;
-    alertEl.className = isError ? 'alert-error' : 'alert-success';
-    alertEl.style.display = 'block';
-    setTimeout(() => { alertEl.style.display = 'none'; }, 3000);
-  } else {
-    alert(message);
+  // Check if toast-container exists
+  let container = document.querySelector('.toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'toast-container';
+    document.body.appendChild(container);
   }
+
+  // Create toast element
+  const toast = document.createElement('div');
+  toast.className = `toast ${isError ? 'toast-error' : 'toast-success'}`;
+  
+  const icon = isError ? '⚠️' : '✅';
+  toast.innerHTML = `<span style="font-size: 20px">${icon}</span> <span>${message}</span>`;
+  
+  container.appendChild(toast);
+
+  // Auto-remove after 3.5 seconds
+  setTimeout(() => {
+    toast.classList.add('toast-fadeout');
+    setTimeout(() => toast.remove(), 400); // Wait for transition
+  }, 3500);
 }
 
 function checkAuthAndRedirect() {
@@ -49,12 +62,15 @@ function checkAuthAndRedirect() {
   const role = localStorage.getItem('mednexis_role');
   
   const path = window.location.pathname;
-  const isAuthPage = path.endsWith('index.html') || path.endsWith('register.html') || path === '/' || path === '';
+  const isAuthPage = path.endsWith('login.html') || path.endsWith('register.html');
   
-  if (!token && !isAuthPage) {
-    window.location.href = 'index.html';
+  if (!token && isAuthPage) {
+    // Normal, let them login
+  } else if (!token && !path.endsWith('index.html') && path !== '/' && path !== '') {
+    // Guest accessing protected dash -> redirect to login
+    window.location.href = 'login.html';
   } else if (token) {
-    if (isAuthPage) {
+    if (isAuthPage || path.endsWith('index.html') || path === '/' || path === '') {
       if (role === 'Admin') window.location.href = 'admin-dashboard.html';
       else if (role === 'Doctor') window.location.href = 'doctor-dashboard.html';
       else window.location.href = 'patient-dashboard.html';

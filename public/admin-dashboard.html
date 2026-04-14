@@ -32,6 +32,7 @@
     function AdminDashboard() {
       const [appointments, setAppointments] = useState([]);
       const [users, setUsers] = useState([]);
+      const [searchTerm, setSearchTerm] = useState('');
       const name = localStorage.getItem('mednexis_name') || 'Admin';
 
       useEffect(() => {
@@ -53,6 +54,13 @@
       const pendingCount = appointments.filter(a => a.status === 'Pending').length;
       const totalDoctors = users.filter(u => u.role === 'Doctor').length;
       const totalPatients = users.filter(u => u.role === 'Patient').length;
+
+      const filtered = appointments.filter(apt => {
+        const query = searchTerm.toLowerCase();
+        return apt.patient?.name?.toLowerCase().includes(query) || 
+               apt.doctor?.name?.toLowerCase().includes(query) || 
+               apt._id.toLowerCase().includes(query);
+      });
 
       return (
         <div className="container">
@@ -83,6 +91,13 @@
           <div className="card">
             <div className="card-title">
               Global Appointment Ledger
+              <input 
+                  type="text" 
+                  placeholder="Search by Patient, Doctor or ID..." 
+                  style={{padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border)', fontSize: '13px', width: '250px'}} 
+                  value={searchTerm} 
+                  onChange={(e) => setSearchTerm(e.target.value)} 
+                />
             </div>
             <div className="table-container">
               <table className="table">
@@ -97,10 +112,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {appointments.length === 0 ? (
+                  {filtered.length === 0 ? (
                     <tr><td colSpan="6" style={{textAlign: 'center', color: 'var(--text-muted)'}}>No system activity detected.</td></tr>
                   ) : (
-                    appointments.map(apt => (
+                    filtered.map(apt => (
                       <tr key={apt._id}>
                         <td style={{fontSize: '11px', color: 'var(--text-muted)'}}>{apt._id.slice(-6)}</td>
                         <td style={{fontWeight: '600'}}>{apt.patient?.name || 'Unknown Patient'}</td>

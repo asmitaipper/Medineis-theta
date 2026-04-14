@@ -49,7 +49,7 @@
         <button type="submit" class="btn btn-secondary">Register</button>
       </form>
       <div class="switch-auth">
-        Already have an account? <a href="index.html">Login here</a>
+        Already have an account? <a href="login.html">Login here</a>
       </div>
     </div>
   </div>
@@ -68,7 +68,7 @@
       try {
         await fetchAPI('/auth/register', 'POST', { name, email, password, role, specialty });
         showAlert('Registration successful! Please login.', false);
-        setTimeout(() => window.location.href = 'index.html', 1500);
+        setTimeout(() => window.location.href = 'login.html', 1500);
       } catch (err) {
         showAlert(err.message);
       }
