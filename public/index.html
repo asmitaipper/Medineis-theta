@@ -212,7 +212,7 @@
 
     <!-- Right: Button -->
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-      <a href="login.html" id="authActionBtn" class="btn" style="background: var(--primary); color: white; border-radius: 30px; padding: 12px 32px; font-family: 'Inter'; font-size: 14px; box-shadow: 0 10px 20px rgba(99,67,232,0.2); font-weight: 600; text-decoration:none; display: inline-flex; justify-content: center; align-items: center; white-space: nowrap;">Login / Register</a>
+      <a href="login.html" id="authActionBtn" class="btn" style="background: var(--primary); color: white; border-radius: 30px; padding: 10px 22px; font-family: 'Inter'; font-size: 14px; box-shadow: 0 5px 15px rgba(99,67,232,0.2); font-weight: 600; text-decoration:none; display: inline-flex; justify-content: center; align-items: center; white-space: nowrap;">Login / Register</a>
     </div>
 
   </nav>
@@ -261,16 +261,67 @@
           </div>
         </div>
 
+  <!-- Services Section -->
+  <section id="services" style="padding: 100px 5%; max-width: 1400px; margin: 0 auto;">
+    <h2 style="font-size: 36px; font-weight: 700; font-family: 'Outfit'; color: #0f172a; margin-bottom: 40px; text-align: center;">Our Medical Services</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+      <div style="position: relative; overflow: hidden; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <img src="https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80&w=800" class="bottom-img" alt="Diagnostics" style="height: 350px;" />
+        <div style="position: absolute; bottom: 20px; left: 20px; background: white; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-family: 'Outfit'; color: #0f172a; font-size: 15px;">Advanced Diagnostics</div>
+      </div>
+      <div style="position: relative; overflow: hidden; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800" class="bottom-img" alt="Surgery Prep" style="height: 350px;" />
+        <div style="position: absolute; bottom: 20px; left: 20px; background: white; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-family: 'Outfit'; color: #0f172a; font-size: 15px;">Surgical Preparation</div>
+      </div>
+      <div style="position: relative; overflow: hidden; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <img src="https://images.unsplash.com/photo-1628102491629-77858ab23612?auto=format&fit=crop&q=80&w=800" class="bottom-img" alt="Consultation" style="height: 350px;" />
+        <div style="position: absolute; bottom: 20px; left: 20px; background: white; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-family: 'Outfit'; color: #0f172a; font-size: 15px;">Remote Consultation</div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Bottom Section Row (matching reference cutoff images) -->
-  <div class="bottom-section" id="services">
-    <img src="https://images.pexels.com/photos/2363825/pexels-photo-2363825.jpeg?auto=compress&cs=tinysrgb&w=600" class="bottom-img" alt="Diagnostics" />
-    <img src="https://images.pexels.com/photos/3279196/pexels-photo-3279196.jpeg?auto=compress&cs=tinysrgb&w=600" class="bottom-img" alt="Surgery Prep" />
-    <img src="https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=600" class="bottom-img" alt="Consultation" />
-  </div>
+  <!-- About Section -->
+  <section id="about" style="padding: 100px 5%; max-width: 1400px; margin: 0 auto; display: flex; gap: 80px; align-items: center; border-top: 1px solid #f1f5f9;">
+    <div style="flex: 1;">
+      <h2 style="font-size: 42px; font-weight: 700; font-family: 'Outfit'; color: #0f172a; line-height: 1.2; margin-bottom: 25px;">Automating Healthcare for Better Outcomes</h2>
+      <p style="color: #64748b; font-size: 18px; line-height: 1.8; margin-bottom: 40px;">At MedNexis, we simplify the complex world of medical administration by fully automating intelligent triage routing, priority casing, and patient intake. This allows doctors to spend less time on paperwork and more time delivering compassionate care.</p>
+      <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 20px;">
+        <li style="display: flex; align-items: center; gap: 15px; color: #0f172a; font-weight: 600; font-size: 16px;"><div style="background: #e0e7ff; color: var(--primary); width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 12px;">✓</div> Automated Triage Routing</li>
+        <li style="display: flex; align-items: center; gap: 15px; color: #0f172a; font-weight: 600; font-size: 16px;"><div style="background: #e0e7ff; color: var(--primary); width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 12px;">✓</div> Intelligent Priority Queuing</li>
+        <li style="display: flex; align-items: center; gap: 15px; color: #0f172a; font-weight: 600; font-size: 16px;"><div style="background: #e0e7ff; color: var(--primary); width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 12px;">✓</div> Secure Digital Records</li>
+      </ul>
+    </div>
+    <div style="flex: 1;">
+      <div style="border-radius: 30px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.15);">
+         <img src="https://images.unsplash.com/photo-1551076805-e18690c5e53b?auto=format&fit=crop&q=80&w=800" style="width: 100%; height: auto; display: block;" alt="Doctor taking notes" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Section -->
+  <section id="blog" style="padding: 100px 5%; max-width: 1400px; margin: 0 auto; background: #f8fafc; border-radius: 40px; margin-bottom: 100px;">
+    <h2 style="font-size: 36px; font-weight: 700; font-family: 'Outfit'; color: #0f172a; margin-bottom: 50px; text-align: center;">Latest Insights & Blog</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+      <!-- Blog card 1 -->
+      <div style="background: white; border-radius: 20px; overflow: hidden; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+        <h3 style="font-size: 22px; font-family: 'Outfit'; margin-bottom: 15px; color: #0f172a; line-height: 1.3;">The Future of AI in Modern Healthcare</h3>
+        <p style="color: #64748b; font-size: 15px; margin-bottom: 30px; line-height: 1.6;">Exploring how machine learning algorithms improve triage efficiency and reduce patient waiting times aggressively.</p>
+        <a href="#" style="color: var(--primary); font-weight: 600; text-decoration: none;">Read Article &rarr;</a>
+      </div>
+      <!-- Blog card 2 -->
+      <div style="background: white; border-radius: 20px; overflow: hidden; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+        <h3 style="font-size: 22px; font-family: 'Outfit'; margin-bottom: 15px; color: #0f172a; line-height: 1.3;">Streamlining Hospital Administration</h3>
+        <p style="color: #64748b; font-size: 15px; margin-bottom: 30px; line-height: 1.6;">A deep dive into how MedNexis uniquely cuts administrative overhead by 40% through end-to-end intelligent routing.</p>
+        <a href="#" style="color: var(--primary); font-weight: 600; text-decoration: none;">Read Article &rarr;</a>
+      </div>
+      <!-- Blog card 3 -->
+      <div style="background: white; border-radius: 20px; overflow: hidden; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+        <h3 style="font-size: 22px; font-family: 'Outfit'; margin-bottom: 15px; color: #0f172a; line-height: 1.3;">Preparing for Advanced Telemedicine</h3>
+        <p style="color: #64748b; font-size: 15px; margin-bottom: 30px; line-height: 1.6;">What clinics need to know to rapidly adapt to the continually rising demand for fully remote patient consultations.</p>
+        <a href="#" style="color: var(--primary); font-weight: 600; text-decoration: none;">Read Article &rarr;</a>
+      </div>
+    </div>
+  </section>
 
   <script src="js/api.js"></script>
   <script>
