@@ -6,326 +6,122 @@
   <title>MedNexis - Advanced Medical Solutions</title>
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    /* Unique layout styles matching the provided reference precisely */
-    nav {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    .landing-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.3fr;
-      gap: 40px;
-      padding: 60px 0 0 5%;
-      max-width: 1600px;
-      margin: 0 auto;
-      align-items: center;
-    }
-    
-    .text-column {
-      padding-bottom: 80px;
-      max-width: 500px;
-    }
-    
-    .text-column h1 {
-      font-size: 64px;
-      font-weight: 500;
-      font-family: 'Outfit', sans-serif;
-      line-height: 1.1;
-      color: #0f172a;
-      margin-bottom: 30px;
-      letter-spacing: -1px;
-    }
-    
-    .purple-italic {
-      color: var(--primary);
-      font-family: 'Times New Roman', serif;
-      font-style: italic;
-      font-weight: 600;
-      font-size: 72px;
-      letter-spacing: 0;
-    }
-    
-    .text-column p {
-      color: #64748b;
-      font-size: 16px;
-      line-height: 1.8;
-      margin-bottom: 40px;
-      padding-left: 50px;
-      position: relative;
-    }
-
-    .text-column p::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 12px;
-      width: 35px;
-      height: 1px;
-      background: #cbd5e1;
-    }
-
-    .discover-link {
-      color: #0f172a;
-      font-weight: 700;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      transition: gap 0.2s;
-    }
-    .discover-link:hover {
-      gap: 15px;
-      color: var(--primary);
-    }
-    
-    /* Right Side Blocks */
-    .purple-backdrop {
-      width: 100%;
-      height: 400px;
-      background: var(--primary);
-      border-radius: 40px 0 0 40px;
-      margin-top: 150px; /* Push down to overlap grid */
-      display: flex;
-      align-items: center;
-      padding: 0 40px;
-      gap: 30px;
-      position: relative;
-    }
-
-    .stats-block {
-      color: white;
-      min-width: 200px;
-    }
-    
-    .stats-block h2 {
-      font-size: 38px;
-      font-family: 'Outfit';
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .floating-photo {
-      width: 300px;
-      height: 480px;
-      background: #e2e8f0;
-      border-radius: 24px;
-      position: absolute;
-      left: 200px;
-      bottom: 0px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      border: 6px solid white;
-      overflow: hidden;
-      z-index: 10;
-    }
-
-    .floating-cards {
-      display: flex;
-      gap: 20px;
-      margin-left: 350px; /* Push past the photo */
-    }
-
-    .card-dark, .card-yellow {
-      width: 170px;
-      height: 200px;
-      border-radius: 24px;
-      padding: 30px 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 20px 30px rgba(0,0,0,0.1);
-    }
-    
-    .card-dark {
-      background: #111827;
-      color: white;
-      transform: translateY(-20px);
-    }
-
-    .card-yellow {
-      background: #FCE162;
-      color: #111827;
-      transform: translateY(20px);
-    }
-
-    .card-title {
-      font-size: 18px;
-      font-weight: 500;
-      font-family: 'Outfit', sans-serif;
-      line-height: 1.3;
-      border-bottom: none !important;
-      padding: 0 !important;
-    }
-
-    .card-link {
-      font-size: 12px;
-      font-weight: 500;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Bottom Section */
-    .bottom-section {
-      padding: 80px 5%;
-      max-width: 1600px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-    }
-    
-    .bottom-img {
-      border-radius: 20px;
-      height: 250px;
-      width: 100%;
-      object-fit: cover;
-    }
-
-    @media (max-width: 1100px) {
-      .landing-grid { grid-template-columns: 1fr; }
-      .purple-backdrop { display: none; } /* Simplify on extremely small screens for now */
-    }
-  </style>
 </head>
 <body>
 
-  <!-- Clean Reference Navbar -->
-  <nav class="navbar" style="border: none; padding: 25px 5%; background: transparent; animation: none; display: flex; width: 100%; justify-content: space-between; align-items: center; max-width: 1600px; margin: 0 auto;">
-    
-    <!-- Left: Logo -->
-    <div style="flex: 1; display: flex; justify-content: flex-start;">
-      <a href="index.html" class="logo" style="color: var(--primary); font-family: 'Outfit'; font-size: 26px; font-weight: 700; display:flex; align-items:center; gap:8px; text-decoration:none;">
-        <span style="font-size:28px;">✚</span>
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">✚</span>
         MedNexis
       </a>
     </div>
-
-    <!-- Center: Links -->
-    <div class="nav-links" style="flex: 1; display: flex; justify-content: center; gap: 40px; margin: 0;">
-      <a href="#home" style="color: #0f172a; font-weight: 600; text-decoration:none;">Home</a>
-      <a href="#about" style="color: #64748b; text-decoration:none;">About</a>
-      <a href="#services" style="color: #64748b; text-decoration:none;">Services</a>
-      <a href="#blog" style="color: #64748b; text-decoration:none;">Blog</a>
+    <div class="nav-links">
+      <a href="#home" class="active">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#blog">Blog</a>
     </div>
-
-    <!-- Right: Button -->
-    <div style="flex: 1; display: flex; justify-content: flex-end;">
-      <a href="login.html" id="authActionBtn" class="btn" style="background: var(--primary); color: white; border-radius: 30px; padding: 10px 22px; font-family: 'Inter'; font-size: 14px; box-shadow: 0 5px 15px rgba(99,67,232,0.2); font-weight: 600; text-decoration:none; display: inline-flex; justify-content: center; align-items: center; white-space: nowrap;">Login / Register</a>
+    <div class="nav-action">
+      <a href="login.html" id="authActionBtn" class="nav-btn">Login / Register</a>
     </div>
-
   </nav>
 
-  <!-- Split Grid Layout -->
-  <div class="landing-grid" id="home">
-    
-    <!-- Left Copy -->
-    <div class="text-column">
-      <h1>Healthier Lives with <br>Advanced <span class="purple-italic">Medical <br>Solutions</span></h1>
-      
-      <p>We are dedicated to delivering compassionate, patient-centered care that prioritizes your well-being. Combining advanced medical solutions with a personalized approach, we strive to empower healthier lives and build trust every step of the way.</p>
-      
-      <a href="register.html" class="discover-link">
-        Discover why we're different <span>&rarr;</span>
-      </a>
-    </div>
-
-    <!-- Right Side Precision Graphic Layout -->
-    <div style="width: 100%; display:flex; justify-content:flex-end;">
-      <div class="purple-backdrop">
-        
-        <!-- Left text in purple space -->
-        <div class="stats-block">
-          <h2>+98.5%</h2>
-          <div style="font-size: 13px; opacity: 0.9; margin-bottom: 24px; line-height: 1.5; max-width:150px;">Demonstrated versatility across mechanisms</div>
-          <div style="background: white; color: var(--text-main); font-size: 12px; font-weight: 600; padding: 10px 16px; border-radius: 30px; display: inline-flex; align-items: center; gap: 10px;">
-            <img src="https://ui-avatars.com/api/?name=Doc&background=random&rounded=true&size=20" /> View Team
-          </div>
-        </div>
-
-        <!-- Overlapping Center Photo -->
-        <div class="floating-photo">
-          <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=800" style="width: 100%; height: 100%; object-fit: cover;" alt="Medical Professional"/>
-        </div>
-
-        <!-- Right Side Floating Cards -->
-        <div class="floating-cards">
-          <div class="card-dark">
-            <h4 style="color: white; font-size: 18px; font-weight: 500; font-family: 'Outfit', sans-serif; line-height: 1.3; margin: 0;">Intelligent<br>routing<br>for solid care</h4>
-            <div class="card-link">View more <span style="font-size: 16px;">&rarr;</span></div>
-          </div>
-          <div class="card-yellow">
-            <h4 style="color: #111827; font-size: 18px; font-weight: 500; font-family: 'Outfit', sans-serif; line-height: 1.3; margin: 0;">Effector priority<br>for solid cases</h4>
-            <div class="card-link">View more <span style="font-size: 16px;">&rarr;</span></div>
-          </div>
-        </div>
-
-  <!-- Services Section -->
-  <section id="services" style="padding: 100px 5%; max-width: 1400px; margin: 0 auto;">
-    <h2 style="font-size: 36px; font-weight: 700; font-family: 'Outfit'; color: #0f172a; margin-bottom: 40px; text-align: center;">Our Medical Services</h2>
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
-      <div style="position: relative; overflow: hidden; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-        <img src="images/services1.jpg" class="bottom-img" alt="Diagnostics" style="height: 350px; width: 100%; object-fit: cover;" />
-        <div style="position: absolute; bottom: 20px; left: 20px; background: white; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-family: 'Outfit'; color: #0f172a; font-size: 15px;">Advanced Diagnostics</div>
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>Healthier Lives with <br>Advanced <span class="purple-italic">Medical <br>Solutions</span></h1>
+        <p>We are dedicated to delivering compassionate, patient-centered care that prioritizes your well-being. Combining advanced medical solutions with a personalized approach, we strive to empower healthier lives and build trust every step of the way.</p>
+        <a href="register.html" class="discover-link">
+          Discover why we're different <span>&rarr;</span>
+        </a>
       </div>
-      <div style="position: relative; overflow: hidden; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-        <img src="images/services2.jpg" class="bottom-img" alt="Surgery Prep" style="height: 350px; width: 100%; object-fit: cover;" />
-        <div style="position: absolute; bottom: 20px; left: 20px; background: white; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-family: 'Outfit'; color: #0f172a; font-size: 15px;">Surgical Preparation</div>
-      </div>
-      <div style="position: relative; overflow: hidden; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
-        <img src="images/services3.jpg" class="bottom-img" alt="Consultation" style="height: 350px; width: 100%; object-fit: cover;" />
-        <div style="position: absolute; bottom: 20px; left: 20px; background: white; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-family: 'Outfit'; color: #0f172a; font-size: 15px;">Remote Consultation</div>
+      <div class="hero-visual">
+        <div class="hero-image-frame">
+          <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=800" alt="Medical Professional"/>
+        </div>
+        <div class="hero-stat-badge">
+          <span class="stat-number">+98.5%</span>
+          <span class="stat-label">Patient Satisfaction Rate</span>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- About Section -->
-  <section id="about" style="padding: 100px 5%; max-width: 1400px; margin: 0 auto; display: flex; gap: 80px; align-items: center; border-top: 1px solid #f1f5f9;">
-    <div style="flex: 1;">
-      <h2 style="font-size: 42px; font-weight: 700; font-family: 'Outfit'; color: #0f172a; line-height: 1.2; margin-bottom: 25px;">Automating Healthcare for Better Outcomes</h2>
-      <p style="color: #64748b; font-size: 18px; line-height: 1.8; margin-bottom: 40px;">At MedNexis, we simplify the complex world of medical administration by fully automating intelligent triage routing, priority casing, and patient intake. This allows doctors to spend less time on paperwork and more time delivering compassionate care.</p>
-      <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 20px;">
-        <li style="display: flex; align-items: center; gap: 15px; color: #0f172a; font-weight: 600; font-size: 16px;"><div style="background: #e0e7ff; color: var(--primary); width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 12px;">✓</div> Automated Triage Routing</li>
-        <li style="display: flex; align-items: center; gap: 15px; color: #0f172a; font-weight: 600; font-size: 16px;"><div style="background: #e0e7ff; color: var(--primary); width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 12px;">✓</div> Intelligent Priority Queuing</li>
-        <li style="display: flex; align-items: center; gap: 15px; color: #0f172a; font-weight: 600; font-size: 16px;"><div style="background: #e0e7ff; color: var(--primary); width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; border-radius: 50%; font-size: 12px;">✓</div> Secure Digital Records</li>
-      </ul>
-    </div>
-    <div style="flex: 1;">
-      <div style="border-radius: 30px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.15);">
-         <img src="images/about.jpg" style="width: 100%; height: auto; display: block; max-height: 400px; object-fit: cover;" alt="Doctor taking notes" />
+  <!-- ===== SERVICES SECTION ===== -->
+  <section id="services" class="section">
+    <h2 class="section-title">Our Medical Services</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <img src="images/services1.jpg" alt="Diagnostics" />
+        <div class="service-label">Advanced Diagnostics</div>
+      </div>
+      <div class="service-card">
+        <img src="images/services2.jpg" alt="Surgery Prep" />
+        <div class="service-label">Surgical Preparation</div>
+      </div>
+      <div class="service-card">
+        <img src="images/services3.jpg" alt="Consultation" />
+        <div class="service-label">Remote Consultation</div>
       </div>
     </div>
   </section>
 
-  <!-- Blog Section -->
-  <section id="blog" style="padding: 100px 5%; max-width: 1400px; margin: 0 auto; background: #f8fafc; border-radius: 40px; margin-bottom: 100px;">
-    <h2 style="font-size: 36px; font-weight: 700; font-family: 'Outfit'; color: #0f172a; margin-bottom: 50px; text-align: center;">Latest Insights & Blog</h2>
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
-      <!-- Blog card 1 -->
-      <div style="background: white; border-radius: 20px; overflow: hidden; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
-        <h3 style="font-size: 22px; font-family: 'Outfit'; margin-bottom: 15px; color: #0f172a; line-height: 1.3;">The Future of AI in Modern Healthcare</h3>
-        <p style="color: #64748b; font-size: 15px; margin-bottom: 30px; line-height: 1.6;">Exploring how machine learning algorithms improve triage efficiency and reduce patient waiting times aggressively.</p>
-        <a href="#" style="color: var(--primary); font-weight: 600; text-decoration: none;">Read Article &rarr;</a>
+  <!-- ===== ABOUT SECTION ===== -->
+  <section id="about" class="section">
+    <div class="about-grid">
+      <div class="about-text">
+        <h2>Automating Healthcare for Better Outcomes</h2>
+        <p>At MedNexis, we simplify the complex world of medical administration by fully automating intelligent triage routing, priority casing, and patient intake. This allows doctors to spend less time on paperwork and more time delivering compassionate care.</p>
+        <ul class="check-list">
+          <li><span class="check-icon">✓</span> Automated Triage Routing</li>
+          <li><span class="check-icon">✓</span> Intelligent Priority Queuing</li>
+          <li><span class="check-icon">✓</span> Secure Digital Records</li>
+        </ul>
       </div>
-      <!-- Blog card 2 -->
-      <div style="background: white; border-radius: 20px; overflow: hidden; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
-        <h3 style="font-size: 22px; font-family: 'Outfit'; margin-bottom: 15px; color: #0f172a; line-height: 1.3;">Streamlining Hospital Administration</h3>
-        <p style="color: #64748b; font-size: 15px; margin-bottom: 30px; line-height: 1.6;">A deep dive into how MedNexis uniquely cuts administrative overhead by 40% through end-to-end intelligent routing.</p>
-        <a href="#" style="color: var(--primary); font-weight: 600; text-decoration: none;">Read Article &rarr;</a>
-      </div>
-      <!-- Blog card 3 -->
-      <div style="background: white; border-radius: 20px; overflow: hidden; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
-        <h3 style="font-size: 22px; font-family: 'Outfit'; margin-bottom: 15px; color: #0f172a; line-height: 1.3;">Preparing for Advanced Telemedicine</h3>
-        <p style="color: #64748b; font-size: 15px; margin-bottom: 30px; line-height: 1.6;">What clinics need to know to rapidly adapt to the continually rising demand for fully remote patient consultations.</p>
-        <a href="#" style="color: var(--primary); font-weight: 600; text-decoration: none;">Read Article &rarr;</a>
+      <div class="about-image">
+        <img src="images/about.jpg" alt="Doctor taking notes" />
       </div>
     </div>
   </section>
+
+  <!-- ===== BLOG SECTION ===== -->
+  <section id="blog" class="section blog-section">
+    <h2 class="section-title">Latest Insights & Blog</h2>
+    <div class="blog-grid">
+      <div class="blog-card">
+        <h3>The Future of AI in Modern Healthcare</h3>
+        <p>Exploring how machine learning algorithms improve triage efficiency and reduce patient waiting times aggressively.</p>
+        <a href="blog.html">Read Article &rarr;</a>
+      </div>
+      <div class="blog-card">
+        <h3>Streamlining Hospital Administration</h3>
+        <p>A deep dive into how MedNexis uniquely cuts administrative overhead by 40% through end-to-end intelligent routing.</p>
+        <a href="blog.html">Read Article &rarr;</a>
+      </div>
+      <div class="blog-card">
+        <h3>Preparing for Advanced Telemedicine</h3>
+        <p>What clinics need to know to rapidly adapt to the continually rising demand for fully remote patient consultations.</p>
+        <a href="blog.html">Read Article &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon">✚</span> MedNexis
+      </div>
+      <p>&copy; 2026 MedNexis. All rights reserved.</p>
+    </div>
+  </footer>
 
   <script src="js/api.js"></script>
   <script>
-    // Dynamically update the Login button to a Dashboard shortcut if the user is authenticated
     const token = localStorage.getItem('mednexis_token');
     const role = localStorage.getItem('mednexis_role');
     if (token && role) {

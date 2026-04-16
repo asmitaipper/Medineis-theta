@@ -8,6 +8,11 @@ const jwt = require('jsonwebtoken');
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, role, specialty } = req.body;
+
+    // Only asmitaipper@gmail.com can register as Admin
+    const ADMIN_EMAIL = 'asmitaipper@gmail.com';
+    const assignedRole = (role === 'Admin' && email !== ADMIN_EMAIL) ? 'Patient' : role;
+
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: 'User already exists' });
 
@@ -18,8 +23,8 @@ router.post('/register', async (req, res) => {
       name, 
       email, 
       password: hashedPassword, 
-      role, 
-      specialty: role === 'Doctor' ? (specialty || 'General Physician') : null 
+      role: assignedRole, 
+      specialty: assignedRole === 'Doctor' ? (specialty || 'General Physician') : null 
     });
     await user.save();
 
