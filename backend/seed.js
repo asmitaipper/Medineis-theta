@@ -44,15 +44,37 @@ async function seedDatabase() {
     console.log('Created Doctor:', doctor.name);
     console.log('Created Patient:', patient.name);
 
-    // 3. Create an Appointment
-    const appointment = new Appointment({
+    // 3. Create Appointments with different priorities
+    const appointment1 = new Appointment({
       patient: patient._id,
       doctor: doctor._id,
       date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // Tomorrow
-      status: 'Confirmed'
+      status: 'Confirmed',
+      priority: 'High',
+      diseaseCategory: 'Cardiology'
     });
-    await appointment.save();
-    console.log('Created Appointment for tomorrow.');
+    await appointment1.save();
+    
+    const appointment2 = new Appointment({
+      patient: patient._id,
+      doctor: doctor._id,
+      date: new Date(new Date().getTime() + 48 * 60 * 60 * 1000), // Day after
+      status: 'Pending',
+      priority: 'Medium',
+      diseaseCategory: 'General'
+    });
+    await appointment2.save();
+
+    const appointment3 = new Appointment({
+      patient: patient._id,
+      doctor: doctor._id,
+      date: new Date(new Date().getTime() + 72 * 60 * 60 * 1000), // 3 Days after
+      status: 'Confirmed',
+      priority: 'Low',
+      diseaseCategory: 'Dermatology'
+    });
+    await appointment3.save();
+    console.log('Created Appointments with different priorities.');
 
     // 4. Create a Medical Record
     const record = new MedicalRecord({
