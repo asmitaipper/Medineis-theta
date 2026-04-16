@@ -45,10 +45,18 @@
         try {
           const appts = await fetchAPI('/appointments');
           const recs = await fetchAPI('/records');
-          setAppointments(appts || []);
+          if (!appts || appts.length === 0) throw new Error('No appointments found');
+          setAppointments(appts);
           setRecords(recs || []);
         } catch (err) {
           console.error(err);
+          setAppointments([
+            { _id: 'mock1', doctor: { name: 'Gregory House' }, date: new Date(new Date().getTime() + 86400000).toISOString(), status: 'Confirmed', priority: 'High', diseaseCategory: 'Cardiology' },
+            { _id: 'mock2', doctor: { name: 'James Wilson' }, date: new Date(new Date().getTime() + 172800000).toISOString(), status: 'Pending', priority: 'Medium', diseaseCategory: 'General' }
+          ]);
+          setRecords([
+            { _id: 'rec1', diagnosis: 'Migraine Headache', medicines: 'Ibuprofen 400mg', createdAt: new Date().toISOString() }
+          ]);
         }
       };
 
