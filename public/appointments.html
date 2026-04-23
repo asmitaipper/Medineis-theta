@@ -60,6 +60,11 @@
     if (role === 'Patient') {
       document.getElementById('bookingCard').style.display = 'block';
       loadDoctors();
+      // Set minimum date to NOW to prevent past dates
+      const dateInput = document.getElementById('date');
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      dateInput.min = now.toISOString().slice(0, 16);
     } else {
       document.getElementById('doctorNotice').style.display = 'block';
     }
@@ -81,6 +86,12 @@
       e.preventDefault();
       const diseaseCategory = document.getElementById('diseaseSelect').value;
       const date = document.getElementById('date').value;
+
+      // Prevent past dates
+      if (new Date(date) < new Date()) {
+        showAlert('❌ You cannot book an appointment in the past. Please select a future date.');
+        return;
+      }
 
       try {
         await fetchAPI('/appointments', 'POST', { diseaseCategory, date });
