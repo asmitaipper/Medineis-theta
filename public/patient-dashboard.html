@@ -52,9 +52,9 @@
         } catch (err) {
           console.error(err);
           setAppointments([
-            { _id: 'mock1', doctor: { name: 'Gregory House' }, date: new Date(new Date().getTime() + 86400000).toISOString(), status: 'Confirmed', priority: 'High', diseaseCategory: 'Cardiology' },
-            { _id: 'mock2', doctor: { name: 'James Wilson' }, date: new Date(new Date().getTime() + 172800000).toISOString(), status: 'Pending', priority: 'Medium', diseaseCategory: 'General' },
-            { _id: 'mock3', doctor: { name: 'Amkita' }, date: new Date(new Date().getTime() + 43200000).toISOString(), status: 'Confirmed', priority: 'High', diseaseCategory: 'Cardiology' }
+            { _id: 'mock1', doctor: { name: 'Rajesh Mehta' }, date: new Date(new Date().getTime() + 86400000).toISOString(), status: 'Confirmed', priority: 'High', diseaseCategory: 'Cardiology' },
+            { _id: 'mock2', doctor: { name: 'Vikram Desai' }, date: new Date(new Date().getTime() + 172800000).toISOString(), status: 'Pending', priority: 'Medium', diseaseCategory: 'General Medicine' },
+            { _id: 'mock3', doctor: { name: 'Kavita Joshi' }, date: new Date(new Date().getTime() + 43200000).toISOString(), status: 'Confirmed', priority: 'High', diseaseCategory: 'Orthopedics' }
           ]);
           setRecords([
             { _id: 'rec1', diagnosis: 'Migraine Headache', medicines: 'Ibuprofen 400mg', createdAt: new Date().toISOString() }

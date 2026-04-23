@@ -6,167 +6,66 @@
   <title>Patient Information - MedNexis</title>
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    .patient-profile {
-      max-width: 900px;
-      margin: 0 auto;
-    }
+    .patient-profile { max-width: 900px; margin: 0 auto; }
     .profile-header {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      padding: 32px;
+      display: flex; align-items: center; gap: 24px; padding: 32px;
       background: linear-gradient(135deg, #6343e8 0%, #4b30bd 100%);
-      border-radius: 20px;
-      color: white;
-      margin-bottom: 28px;
+      border-radius: 20px; color: white; margin-bottom: 28px;
       box-shadow: 0 12px 32px rgba(99, 67, 232, 0.25);
     }
     .profile-avatar {
-      width: 80px;
-      height: 80px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
-      font-weight: 700;
-      flex-shrink: 0;
-      border: 3px solid rgba(255,255,255,0.4);
+      width: 80px; height: 80px; background: rgba(255,255,255,0.2);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 36px; font-weight: 700; flex-shrink: 0; border: 3px solid rgba(255,255,255,0.4);
     }
     .profile-meta h2 { margin: 0 0 6px; font-size: 26px; }
     .profile-meta p { margin: 0; opacity: 0.85; font-size: 14px; }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-bottom: 28px;
+    .patient-selector {
+      margin-bottom: 28px; display: flex; align-items: center; gap: 16px;
+      background: white; padding: 20px 28px; border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;
     }
-    @media (max-width: 640px) {
-      .info-grid { grid-template-columns: 1fr; }
+    .patient-selector label { font-weight: 600; font-size: 15px; white-space: nowrap; }
+    .patient-selector select {
+      flex: 1; padding: 12px 16px; border-radius: 10px; border: 1px solid #e2e8f0;
+      font-size: 15px; font-family: 'Inter', sans-serif; background: #f8fafc;
+      cursor: pointer; transition: border-color 0.2s;
     }
+    .patient-selector select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(99,67,232,0.1); }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+    @media (max-width: 640px) { .info-grid { grid-template-columns: 1fr; } }
     .info-card {
-      background: white;
-      border-radius: 16px;
-      padding: 28px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-      border: 1px solid #e2e8f0;
+      background: white; border-radius: 16px; padding: 28px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;
     }
     .info-card h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 18px;
-      margin-bottom: 18px;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-family: 'Outfit', sans-serif; font-size: 18px; margin-bottom: 18px;
+      color: var(--primary); display: flex; align-items: center; gap: 8px;
     }
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 14px;
-    }
+    .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
     .info-row:last-child { border-bottom: none; }
     .info-label { color: var(--text-muted); font-weight: 500; }
     .info-value { color: var(--text-main); font-weight: 600; text-align: right; max-width: 55%; }
-
-    .med-timeline {
-      position: relative;
-      padding-left: 24px;
-    }
-    .med-timeline::before {
-      content: '';
-      position: absolute;
-      left: 7px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, var(--primary), #e2e8f0);
-    }
-    .med-entry {
-      position: relative;
-      padding: 16px 0 16px 16px;
-    }
-    .med-entry::before {
-      content: '';
-      position: absolute;
-      left: -20px;
-      top: 22px;
-      width: 12px;
-      height: 12px;
-      background: var(--primary);
-      border-radius: 50%;
-      border: 2px solid white;
-      box-shadow: 0 0 0 3px var(--primary-glow);
-    }
-    .med-entry-date {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .med-entry-title {
-      font-weight: 600;
-      font-size: 15px;
-      color: var(--text-main);
-      margin-bottom: 4px;
-    }
-    .med-entry-detail {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    .medicine-tag {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      margin: 3px 4px 3px 0;
-    }
-    .medicine-tag.active {
-      background: #d1fae5;
-      color: #065f46;
-    }
-    .medicine-tag.past {
-      background: #f1f5f9;
-      color: #64748b;
-    }
-
-    .vitals-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    @media (max-width: 640px) {
-      .vitals-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    .vital-box {
-      text-align: center;
-      padding: 16px 10px;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-    }
-    .vital-box .vital-num {
-      font-family: 'Outfit', sans-serif;
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--primary);
-    }
-    .vital-box .vital-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .full-width-card {
-      grid-column: 1 / -1;
-    }
+    .med-timeline { position: relative; padding-left: 24px; }
+    .med-timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--primary), #e2e8f0); }
+    .med-entry { position: relative; padding: 16px 0 16px 16px; }
+    .med-entry::before { content: ''; position: absolute; left: -20px; top: 22px; width: 12px; height: 12px; background: var(--primary); border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 3px rgba(99,67,232,0.2); }
+    .med-entry-date { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+    .med-entry-title { font-weight: 600; font-size: 15px; color: var(--text-main); margin-bottom: 4px; }
+    .med-entry-detail { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .medicine-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 3px 4px 3px 0; }
+    .medicine-tag.active { background: #d1fae5; color: #065f46; }
+    .medicine-tag.past { background: #f1f5f9; color: #64748b; }
+    .vitals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media (max-width: 640px) { .vitals-grid { grid-template-columns: repeat(2, 1fr); } }
+    .vital-box { text-align: center; padding: 16px 10px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; }
+    .vital-box .vital-num { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; color: var(--primary); }
+    .vital-box .vital-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .full-width-card { grid-column: 1 / -1; }
   </style>
 </head>
 <body>
@@ -181,205 +80,7 @@
     </div>
   </nav>
 
-  <div class="container">
-    <div class="patient-profile">
-      
-      <!-- Profile Header -->
-      <div class="profile-header">
-        <div class="profile-avatar">A</div>
-        <div class="profile-meta">
-          <h2>Ankita Sharma</h2>
-          <p>Patient ID: MNX-00421 &nbsp;|&nbsp; Cardiology Department &nbsp;|&nbsp; Assigned to Dr. Gregory House</p>
-        </div>
-      </div>
-
-      <div class="info-grid">
-
-        <!-- Personal Details -->
-        <div class="info-card">
-          <h3>👤 Personal Details</h3>
-          <div class="info-row">
-            <span class="info-label">Full Name</span>
-            <span class="info-value">Ankita Sharma</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Date of Birth</span>
-            <span class="info-value">12 March 1995</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Age</span>
-            <span class="info-value">31 Years</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Gender</span>
-            <span class="info-value">Female</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Blood Group</span>
-            <span class="info-value">B+</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Phone</span>
-            <span class="info-value">+91 98765 43210</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Email</span>
-            <span class="info-value">ankita.sharma@gmail.com</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Emergency Contact</span>
-            <span class="info-value">Rahul Sharma (Husband) — +91 98332 11223</span>
-          </div>
-        </div>
-
-        <!-- Current Vitals -->
-        <div class="info-card">
-          <h3>💓 Current Vitals</h3>
-          <div class="vitals-grid">
-            <div class="vital-box">
-              <div class="vital-num">72</div>
-              <div class="vital-label">Heart Rate (bpm)</div>
-            </div>
-            <div class="vital-box">
-              <div class="vital-num">130/85</div>
-              <div class="vital-label">Blood Pressure</div>
-            </div>
-            <div class="vital-box">
-              <div class="vital-num">98.4°F</div>
-              <div class="vital-label">Temperature</div>
-            </div>
-            <div class="vital-box">
-              <div class="vital-num">97%</div>
-              <div class="vital-label">SpO2</div>
-            </div>
-            <div class="vital-box">
-              <div class="vital-num">220</div>
-              <div class="vital-label">Cholesterol (mg/dL)</div>
-            </div>
-            <div class="vital-box">
-              <div class="vital-num">5.8%</div>
-              <div class="vital-label">HbA1c</div>
-            </div>
-          </div>
-          <div style="margin-top: 16px; padding: 12px; background: #fef3c7; border-radius: 10px; font-size: 13px; color: #92400e;">
-            ⚠️ <strong>Note:</strong> BP slightly elevated. Cholesterol borderline high — monitor with next checkup.
-          </div>
-        </div>
-
-        <!-- Medical History Timeline -->
-        <div class="info-card full-width-card">
-          <h3>📋 Medical History &amp; Consultation Timeline</h3>
-          <div class="med-timeline">
-            <div class="med-entry">
-              <div class="med-entry-date">15 April 2026</div>
-              <div class="med-entry-title">Cardiology Consultation — Dr. Gregory House</div>
-              <div class="med-entry-detail">
-                Chief complaint: Chest tightness and occasional palpitations for 2 weeks. ECG showed sinus tachycardia. 
-                2D Echo recommended. Advised stress management and dietary changes.
-              </div>
-            </div>
-            <div class="med-entry">
-              <div class="med-entry-date">28 February 2026</div>
-              <div class="med-entry-title">General Checkup — Dr. James Wilson</div>
-              <div class="med-entry-detail">
-                Annual health checkup. Blood work showed borderline high cholesterol (LDL: 148 mg/dL). 
-                No other abnormalities. Advised exercise routine and follow-up in 2 months.
-              </div>
-            </div>
-            <div class="med-entry">
-              <div class="med-entry-date">10 September 2025</div>
-              <div class="med-entry-title">Viral Fever — Dr. James Wilson</div>
-              <div class="med-entry-detail">
-                High fever (102°F) with body ache and fatigue for 3 days. Diagnosed as seasonal viral infection. 
-                Prescribed Paracetamol 650mg and rest. Recovered in 5 days.
-              </div>
-            </div>
-            <div class="med-entry">
-              <div class="med-entry-date">05 January 2025</div>
-              <div class="med-entry-title">Cardiology Follow-up — Dr. Gregory House</div>
-              <div class="med-entry-detail">
-                Follow-up for previously detected mild mitral valve prolapse. Stable on repeat Echo. 
-                No intervention needed. Annual monitoring recommended.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Current Medicines -->
-        <div class="info-card">
-          <h3>💊 Current Medicines</h3>
-          <div style="margin-bottom: 12px;">
-            <span class="medicine-tag active">Atorvastatin 10mg — once daily</span>
-            <span class="medicine-tag active">Amlodipine 5mg — once daily</span>
-            <span class="medicine-tag active">Aspirin 75mg — once daily</span>
-            <span class="medicine-tag active">Vitamin D3 60K — once weekly</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Started On</span>
-            <span class="info-value">15 April 2026</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Prescribed By</span>
-            <span class="info-value">Dr. Gregory House</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Review Date</span>
-            <span class="info-value">15 May 2026</span>
-          </div>
-        </div>
-
-        <!-- Past Medicines -->
-        <div class="info-card">
-          <h3>🗂️ Previously Prescribed Medicines</h3>
-          <div style="margin-bottom: 12px;">
-            <span class="medicine-tag past">Paracetamol 650mg — Sep 2025 (Discontinued)</span>
-            <span class="medicine-tag past">Ibuprofen 400mg — Sep 2025 (Discontinued)</span>
-            <span class="medicine-tag past">Cetirizine 10mg — Aug 2025 (Discontinued)</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Reason for Discontinuation</span>
-            <span class="info-value">Condition resolved / No longer needed</span>
-          </div>
-        </div>
-
-        <!-- Allergies & Notes -->
-        <div class="info-card full-width-card">
-          <h3>⚠️ Allergies &amp; Important Notes</h3>
-          <div class="info-grid" style="margin-bottom: 0;">
-            <div>
-              <div class="info-row">
-                <span class="info-label">Known Allergies</span>
-                <span class="info-value">Sulfa drugs, Penicillin</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Chronic Conditions</span>
-                <span class="info-value">Mild Mitral Valve Prolapse</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Family History</span>
-                <span class="info-value">Father — Hypertension; Mother — Type 2 Diabetes</span>
-              </div>
-            </div>
-            <div>
-              <div class="info-row">
-                <span class="info-label">Lifestyle</span>
-                <span class="info-value">Non-smoker, Occasional alcohol, Sedentary job</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Diet</span>
-                <span class="info-value">Vegetarian</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Insurance</span>
-                <span class="info-value">Star Health — Policy #SH20241587</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- info-grid end -->
-    </div><!-- patient-profile end -->
-  </div>
+  <div class="container" id="root"></div>
 
   <script src="js/api.js"></script>
   <script>
@@ -387,6 +88,260 @@
     const role = localStorage.getItem('mednexis_role');
     document.getElementById('homeLink').href = role === 'Doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
     document.getElementById('dashLink').href = role === 'Doctor' ? 'doctor-dashboard.html' : 'patient-dashboard.html';
+  </script>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const patientsData = [
+      {
+        id: 'MNX-00421',
+        name: 'Ankita Sharma',
+        avatar: 'A',
+        department: 'Cardiology',
+        doctor: 'Dr. Rajesh Mehta',
+        dob: '12 March 1995',
+        age: '31 Years',
+        gender: 'Female',
+        blood: 'B+',
+        phone: '+91 98765 43210',
+        email: 'ankita.sharma@gmail.com',
+        emergency: 'Rahul Sharma (Husband) — +91 98332 11223',
+        vitals: { hr: '72', bp: '130/85', temp: '98.4°F', spo2: '97%', chol: '220', hba1c: '5.8%' },
+        vitalNote: 'BP slightly elevated. Cholesterol borderline high — monitor with next checkup.',
+        history: [
+          { date: '15 April 2026', title: 'Cardiology Consultation — Dr. Rajesh Mehta', detail: 'Chief complaint: Chest tightness and occasional palpitations for 2 weeks. ECG showed sinus tachycardia. 2D Echo recommended. Advised stress management and dietary changes.' },
+          { date: '28 February 2026', title: 'General Checkup — Dr. Vikram Desai', detail: 'Annual health checkup. Blood work showed borderline high cholesterol (LDL: 148 mg/dL). No other abnormalities. Advised exercise routine and follow-up in 2 months.' },
+          { date: '10 September 2025', title: 'Viral Fever — Dr. Vikram Desai', detail: 'High fever (102°F) with body ache and fatigue for 3 days. Diagnosed as seasonal viral infection. Prescribed Paracetamol 650mg and rest. Recovered in 5 days.' },
+          { date: '05 January 2025', title: 'Cardiology Follow-up — Dr. Rajesh Mehta', detail: 'Follow-up for previously detected mild mitral valve prolapse. Stable on repeat Echo. No intervention needed. Annual monitoring recommended.' }
+        ],
+        currentMeds: ['Atorvastatin 10mg — once daily', 'Amlodipine 5mg — once daily', 'Aspirin 75mg — once daily', 'Vitamin D3 60K — once weekly'],
+        medStarted: '15 April 2026', medPrescribedBy: 'Dr. Rajesh Mehta', medReview: '15 May 2026',
+        pastMeds: ['Paracetamol 650mg — Sep 2025 (Discontinued)', 'Ibuprofen 400mg — Sep 2025 (Discontinued)', 'Cetirizine 10mg — Aug 2025 (Discontinued)'],
+        pastMedReason: 'Condition resolved / No longer needed',
+        allergies: 'Sulfa drugs, Penicillin',
+        chronic: 'Mild Mitral Valve Prolapse',
+        familyHistory: 'Father — Hypertension; Mother — Type 2 Diabetes',
+        lifestyle: 'Non-smoker, Occasional alcohol, Sedentary job',
+        diet: 'Vegetarian',
+        insurance: 'Star Health — Policy #SH20241587'
+      },
+      {
+        id: 'MNX-00318',
+        name: 'Priya Nair',
+        avatar: 'P',
+        department: 'Neurology',
+        doctor: 'Dr. Suresh Iyer',
+        dob: '25 July 1990',
+        age: '35 Years',
+        gender: 'Female',
+        blood: 'O+',
+        phone: '+91 94561 78234',
+        email: 'priya.nair@gmail.com',
+        emergency: 'Deepak Nair (Father) — +91 97865 44321',
+        vitals: { hr: '78', bp: '118/76', temp: '98.2°F', spo2: '99%', chol: '185', hba1c: '5.2%' },
+        vitalNote: 'All vitals within normal range. Continue current management.',
+        history: [
+          { date: '20 April 2026', title: 'Neurology Consultation — Dr. Suresh Iyer', detail: 'Recurring migraines with aura, 3-4 episodes per month. MRI Brain normal. Started on Topiramate for migraine prophylaxis.' },
+          { date: '12 January 2026', title: 'General Checkup — Dr. Vikram Desai', detail: 'Routine checkup. All blood parameters normal. Patient reports occasional stress-related headaches. Referred to neurology for persistent migraines.' },
+          { date: '08 October 2025', title: 'ENT Consultation — Dr. Meena Kapoor', detail: 'Complaint of vertigo and dizziness. Ruled out inner ear pathology. Diagnosed as tension-type headache with vestibular component.' }
+        ],
+        currentMeds: ['Topiramate 25mg — twice daily', 'Sumatriptan 50mg — as needed for acute migraine', 'Magnesium 400mg — once daily'],
+        medStarted: '20 April 2026', medPrescribedBy: 'Dr. Suresh Iyer', medReview: '20 May 2026',
+        pastMeds: ['Amitriptyline 10mg — Jan 2026 (Discontinued)', 'Domperidone 10mg — Oct 2025 (Discontinued)'],
+        pastMedReason: 'Switched to better-suited prophylactic medication',
+        allergies: 'Codeine',
+        chronic: 'Chronic Migraine with Aura',
+        familyHistory: 'Mother — Migraine; Grandmother — Stroke',
+        lifestyle: 'Non-smoker, Non-drinker, IT professional (high screen time)',
+        diet: 'Non-Vegetarian',
+        insurance: 'HDFC ERGO — Policy #HE20250342'
+      },
+      {
+        id: 'MNX-00512',
+        name: 'Arjun Patel',
+        avatar: 'A',
+        department: 'Orthopedics',
+        doctor: 'Dr. Kavita Joshi',
+        dob: '03 November 1988',
+        age: '37 Years',
+        gender: 'Male',
+        blood: 'A+',
+        phone: '+91 88976 55432',
+        email: 'arjun.patel@gmail.com',
+        emergency: 'Sneha Patel (Wife) — +91 99012 33456',
+        vitals: { hr: '68', bp: '122/80', temp: '98.6°F', spo2: '98%', chol: '195', hba1c: '5.5%' },
+        vitalNote: 'Vitals normal. Post-surgery recovery on track. Physiotherapy continuing.',
+        history: [
+          { date: '10 April 2026', title: 'Orthopedic Follow-up — Dr. Kavita Joshi', detail: 'Post ACL reconstruction surgery (6 weeks). ROM improving. Started weight-bearing exercises. X-ray shows good graft placement. Continue physiotherapy 3x/week.' },
+          { date: '25 February 2026', title: 'ACL Reconstruction Surgery — Dr. Kavita Joshi', detail: 'Right knee ACL tear from sports injury. Arthroscopic ACL reconstruction with hamstring autograft. Surgery successful. Discharged after 2 days.' },
+          { date: '10 February 2026', title: 'MRI & Pre-op — Dr. Kavita Joshi', detail: 'MRI confirmed complete ACL tear right knee with medial meniscus involvement. Pre-operative clearance obtained. Surgery scheduled for 25 Feb.' },
+          { date: '01 February 2026', title: 'Injury Assessment — Dr. Kavita Joshi', detail: 'Acute right knee injury during cricket match. Swelling and instability. Clinical exam suggests ACL tear. MRI ordered.' }
+        ],
+        currentMeds: ['Aceclofenac 100mg — twice daily (for pain)', 'Calcium + Vitamin D3 — once daily', 'Pregabalin 75mg — at bedtime', 'Pantoprazole 40mg — before breakfast'],
+        medStarted: '25 February 2026', medPrescribedBy: 'Dr. Kavita Joshi', medReview: '10 May 2026',
+        pastMeds: ['Tramadol 50mg — Mar 2026 (Tapered off)', 'Cefuroxime 500mg — Mar 2026 (Antibiotic course completed)'],
+        pastMedReason: 'Post-surgery course completed / Tapered as pain reduced',
+        allergies: 'None known',
+        chronic: 'None',
+        familyHistory: 'Father — Osteoarthritis',
+        lifestyle: 'Non-smoker, Social drinker, Sports enthusiast (currently rehab)',
+        diet: 'Non-Vegetarian',
+        insurance: 'ICICI Lombard — Policy #IL20260198'
+      },
+      {
+        id: 'MNX-00287',
+        name: 'Meera Kulkarni',
+        avatar: 'M',
+        department: 'General Medicine',
+        doctor: 'Dr. Vikram Desai',
+        dob: '18 May 1975',
+        age: '50 Years',
+        gender: 'Female',
+        blood: 'AB+',
+        phone: '+91 77654 88901',
+        email: 'meera.kulkarni@gmail.com',
+        emergency: 'Sanjay Kulkarni (Son) — +91 90123 45678',
+        vitals: { hr: '82', bp: '145/92', temp: '98.4°F', spo2: '96%', chol: '248', hba1c: '7.1%' },
+        vitalNote: 'BP elevated — Hypertension Stage 1. HbA1c above target — diabetes management needs adjustment.',
+        history: [
+          { date: '18 April 2026', title: 'Diabetes & Hypertension Review — Dr. Vikram Desai', detail: 'HbA1c increased from 6.8% to 7.1%. Fasting glucose 142 mg/dL. BP 145/92. Added Metformin SR and increased Telmisartan dose. Diet counseling done.' },
+          { date: '15 January 2026', title: 'Annual Checkup — Dr. Vikram Desai', detail: 'Lipid profile: Total cholesterol 248, LDL 162. Thyroid — TSH normal. Kidney function normal. Started Rosuvastatin.' },
+          { date: '20 August 2025', title: 'UTI Treatment — Dr. Vikram Desai', detail: 'Complaint of burning micturition and lower abdominal pain. Urine culture positive for E.coli. Treated with Nitrofurantoin 100mg for 7 days. Resolved completely.' }
+        ],
+        currentMeds: ['Metformin SR 1000mg — twice daily', 'Telmisartan 80mg — once daily', 'Rosuvastatin 10mg — at bedtime', 'Glimepiride 2mg — before breakfast', 'Aspirin 75mg — once daily'],
+        medStarted: '18 April 2026', medPrescribedBy: 'Dr. Vikram Desai', medReview: '18 May 2026',
+        pastMeds: ['Nitrofurantoin 100mg — Aug 2025 (Course completed)', 'Metformin 500mg — Jan 2026 (Dosage increased)'],
+        pastMedReason: 'Course completed / Dosage adjustment required',
+        allergies: 'Ibuprofen (Gastric irritation)',
+        chronic: 'Type 2 Diabetes Mellitus, Essential Hypertension, Dyslipidemia',
+        familyHistory: 'Mother — Diabetes; Father — Heart Disease (MI at 62)',
+        lifestyle: 'Non-smoker, Non-drinker, Retired teacher, Morning walks daily',
+        diet: 'Vegetarian (Diabetic diet plan)',
+        insurance: 'LIC Health — Policy #LH20231045'
+      }
+    ];
+
+    function PatientInfo() {
+      const [selectedIdx, setSelectedIdx] = useState(0);
+      const p = patientsData[selectedIdx];
+
+      return (
+        <div className="patient-profile">
+          {/* Patient Selector */}
+          <div className="patient-selector">
+            <label>🔍 Select Patient:</label>
+            <select value={selectedIdx} onChange={(e) => setSelectedIdx(Number(e.target.value))}>
+              {patientsData.map((pt, i) => (
+                <option key={pt.id} value={i}>{pt.name} — {pt.id} ({pt.department})</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Profile Header */}
+          <div className="profile-header">
+            <div className="profile-avatar">{p.avatar}</div>
+            <div className="profile-meta">
+              <h2>{p.name}</h2>
+              <p>Patient ID: {p.id} &nbsp;|&nbsp; {p.department} Department &nbsp;|&nbsp; Assigned to {p.doctor}</p>
+            </div>
+          </div>
+
+          <div className="info-grid">
+            {/* Personal Details */}
+            <div className="info-card">
+              <h3>👤 Personal Details</h3>
+              {[
+                ['Full Name', p.name], ['Date of Birth', p.dob], ['Age', p.age],
+                ['Gender', p.gender], ['Blood Group', p.blood], ['Phone', p.phone],
+                ['Email', p.email], ['Emergency Contact', p.emergency]
+              ].map(([label, val]) => (
+                <div className="info-row" key={label}>
+                  <span className="info-label">{label}</span>
+                  <span className="info-value">{val}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Current Vitals */}
+            <div className="info-card">
+              <h3>💓 Current Vitals</h3>
+              <div className="vitals-grid">
+                {[
+                  [p.vitals.hr, 'Heart Rate (bpm)'], [p.vitals.bp, 'Blood Pressure'],
+                  [p.vitals.temp, 'Temperature'], [p.vitals.spo2, 'SpO2'],
+                  [p.vitals.chol, 'Cholesterol (mg/dL)'], [p.vitals.hba1c, 'HbA1c']
+                ].map(([num, label]) => (
+                  <div className="vital-box" key={label}>
+                    <div className="vital-num">{num}</div>
+                    <div className="vital-label">{label}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{marginTop: '16px', padding: '12px', background: '#fef3c7', borderRadius: '10px', fontSize: '13px', color: '#92400e'}}>
+                ⚠️ <strong>Note:</strong> {p.vitalNote}
+              </div>
+            </div>
+
+            {/* Medical History Timeline */}
+            <div className="info-card full-width-card">
+              <h3>📋 Medical History &amp; Consultation Timeline</h3>
+              <div className="med-timeline">
+                {p.history.map((h, i) => (
+                  <div className="med-entry" key={i}>
+                    <div className="med-entry-date">{h.date}</div>
+                    <div className="med-entry-title">{h.title}</div>
+                    <div className="med-entry-detail">{h.detail}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Current Medicines */}
+            <div className="info-card">
+              <h3>💊 Current Medicines</h3>
+              <div style={{marginBottom: '12px'}}>
+                {p.currentMeds.map((m, i) => <span key={i} className="medicine-tag active">{m}</span>)}
+              </div>
+              {[['Started On', p.medStarted], ['Prescribed By', p.medPrescribedBy], ['Review Date', p.medReview]].map(([l, v]) => (
+                <div className="info-row" key={l}><span className="info-label">{l}</span><span className="info-value">{v}</span></div>
+              ))}
+            </div>
+
+            {/* Past Medicines */}
+            <div className="info-card">
+              <h3>🗂️ Previously Prescribed Medicines</h3>
+              <div style={{marginBottom: '12px'}}>
+                {p.pastMeds.map((m, i) => <span key={i} className="medicine-tag past">{m}</span>)}
+              </div>
+              <div className="info-row">
+                <span className="info-label">Reason for Discontinuation</span>
+                <span className="info-value">{p.pastMedReason}</span>
+              </div>
+            </div>
+
+            {/* Allergies & Notes */}
+            <div className="info-card full-width-card">
+              <h3>⚠️ Allergies &amp; Important Notes</h3>
+              <div className="info-grid" style={{marginBottom: 0}}>
+                <div>
+                  {[['Known Allergies', p.allergies], ['Chronic Conditions', p.chronic], ['Family History', p.familyHistory]].map(([l, v]) => (
+                    <div className="info-row" key={l}><span className="info-label">{l}</span><span className="info-value">{v}</span></div>
+                  ))}
+                </div>
+                <div>
+                  {[['Lifestyle', p.lifestyle], ['Diet', p.diet], ['Insurance', p.insurance]].map(([l, v]) => (
+                    <div className="info-row" key={l}><span className="info-label">{l}</span><span className="info-value">{v}</span></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<PatientInfo />);
   </script>
 </body>
 </html>
